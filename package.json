@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "urls": [
+    ["my_pkg/__init__.py", "github:myorg/my-mpy-pkg/my_pkg/__init__.py"],
+    ["my_pkg/driver.py",   "github:myorg/my-mpy-pkg/my_pkg/driver.py"]
+  ]
+}
