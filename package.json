@@ -1,7 +1,8 @@
 {
   "version": "1.0.0",
   "urls": [
-    ["bitblock/__init__.py", "github:moyalab/bitblock-board-env/src/__init__.py"],
-    ["bitblock/board.py", "github:moyalab/bitblock-board-env/src/board.py"]
+    ["bitblock/__init__.mpy", "github:moyalab/bitblock-board-env/src/__init__.mpy"],
+    ["bitblock/bitblock.mpy", "github:moyalab/bitblock-board-env/src/bitblock.mpy"],
+    ["bitblock/bitblock_data.mpy", "github:moyalab/bitblock-board-env/src/bitblock_data.mpy"]
   ]
 }
