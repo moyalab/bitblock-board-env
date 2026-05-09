@@ -1,0 +1,2669 @@
+/*
+  On 20250303, due to font files inconsistencies, we sourced the updated fonts from here:
+  https://github.com/alsacreations/webfonts
+  
+*/
+@font-face {
+  font-family: "CodeFont";
+  src:
+    url("media/Roboto-Mono-Regular-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "CodeFont";
+  src:
+    url("media/Roboto-Mono-Bold-webfont.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "OpenSans";
+  src: url("media/opensans-regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "OpenSans";
+  src: url("media/opensans-bold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+}
+
+* {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  font-family: "OpenSans", sans-serif;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #4285F4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 320ms ease;
+}
+.splash.splash-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.splash-logo {
+  width: min(70vw, 640px);
+  height: auto;
+  max-height: 60vh;
+  animation: splash-logo-in 600ms ease-out both,
+             splash-logo-pulse 2000ms ease-in-out 600ms infinite;
+}
+
+@keyframes splash-logo-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes splash-logo-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 0.92;
+  }
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+button {
+  display: flex;
+  width: 45px;
+  height: 45px;
+  padding: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+button.small {
+  width: 28px;
+  height: 28px;
+  border-radius: 28px;
+}
+button.square {
+  border-radius: 8px;
+}
+button.inverted:hover,
+button.inverted.active {
+  background: rgba(0, 129, 132, 0.8) !important;
+}
+button.inverted {
+  background: rgba(0, 129, 132, 1) !important;
+}
+
+button[disabled], button[disabled]:hover{
+  cursor: default;
+  opacity: 0.5;
+}
+
+button:not([disabled]):hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+}
+
+button.active {
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 8px;
+}
+
+button .icon {
+  width: 80%;
+  height: 80%;
+}
+button.small .icon {
+  width: 75%;
+  height: 75%;
+}
+
+
+.button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+  align-items: center;
+  gap: 2px;
+  width: auto
+}
+.button.first{
+  width:80px;
+}
+.button .label {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: "OpenSans", sans-serif;
+  font-size: 11px;
+}
+.button .label.active {
+  color: rgba(255, 255, 255, .9);
+}
+.button .tooltip {
+  opacity: 0;
+  position: absolute;
+  top: 120%;
+  left: 0;
+  font-size: 10px;
+  background: #fff;
+  padding: 8px;
+  z-index: 99;
+  transition: all 0.1s;
+  transition-delay: 0.0s;
+  pointer-events: none;
+  text-align: center;
+  transform: translateY(-10px);
+  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+              0px 3px 1px -2px rgba(0, 0, 0, 0.12),
+              0px 1px 5px 0px rgba(0, 0, 0, 0.20);
+}
+
+.button:focus .tooltip,
+.button:hover .tooltip {
+  opacity: 1;
+  transform: translateY(0px);
+  transition: all 0.25s;
+  transition-delay: 0.5s;
+}
+
+#app {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  font-family: "CodeFont", monospace;
+  overflow: hidden;
+}
+
+/* Phase 4 menu bar + view wrapper. Stacks the menu bar above the active
+   view in column flex without disturbing the centered "select folder"
+   first-run screen (which doesn't use this wrapper). */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.app-shell > .app-menu-bar { flex: 0 0 auto; }
+.app-shell > #navigation-bar { flex: 0 0 auto; }
+.app-shell > .working-area { flex: 1 1 auto; min-height: 0; }
+.app-shell > .app-main { flex: 1 1 auto; min-height: 0; }
+.app-shell > .app-footer { flex: 0 0 10px; }
+
+.app-footer {
+  height: 10px;
+  width: 100%;
+  background: #E8EAEC;
+}
+
+/* Permanent left sidebar layout (replaces old view toggle) */
+.app-main {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Activity bar — VSCode-style 80px vertical strip on the far left.
+   Lives directly inside .app-main, so it never overlaps anything and
+   always has a fixed-width column reserved for it. */
+.activity-bar {
+  flex: 0 0 80px;
+  width: 80px;
+  background: #4285F4;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 11;
+}
+.activity-group { display: flex; flex-direction: column; }
+/* Horizontal separator between activity-bar groups. Matches python-ide's
+   ActivityBar Divider: 1px tall, 12px horizontal / 4px vertical margin,
+   30% white over the blue bar. */
+.activity-divider {
+  height: 1px;
+  margin: 4px 12px;
+  background: rgba(255, 255, 255, 0.3);
+}
+/* Global `button { width: 45px; height: 45px; padding: 0 }` rule lives
+   higher up in this file (toolbar buttons depend on it). Every custom
+   button below has to opt out by specifying width/height/padding
+   explicitly, otherwise text gets squeezed into a 45px square and
+   wraps a character per line. */
+.activity-item {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  width: 100%;
+  height: 80px;
+  min-width: 0;
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.activity-item:hover,
+button.activity-item:not([disabled]):hover {
+  background: transparent;
+  border-radius: 0;
+}
+.activity-item.is-active:hover,
+button.activity-item.is-active:not([disabled]):hover {
+  background: #f8fafc;
+}
+.activity-item.is-active {
+  background: #f8fafc;
+  color: #4285F4;
+}
+.activity-icon { font-size: 24px; line-height: 1; }
+/* SVG variant of activity-icon — 24×24 box, fill follows the button's
+   `color` via fill="currentColor" so it flips with active/inactive state. */
+.activity-svg-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+.activity-svg-icon > svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+.activity-label {
+  font-size: 11px;
+  line-height: 1.1;
+  opacity: 0.9;
+  text-align: center;
+}
+.activity-item.is-active .activity-label { opacity: 1; font-weight: 600; }
+
+/* Topic-list panel (reference content rendered inside the sidebar) */
+.topic-list,
+.topic-detail {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  background: #fff;
+}
+.topic-list-header,
+.topic-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.topic-list-header { font-weight: 700; font-size: 16px; color: #111; }
+.topic-list-body {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 0;
+}
+/* Card-style topic row — lavender icon tile + title/desc + chevron.
+   The global `button` rule earlier in this file forces flex-direction
+   to column and justify-content to center; we override both back to a
+   horizontal row so the icon/text/arrow lay out left-to-right. */
+.topic-card {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 14px 18px;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  height: auto;
+  box-sizing: border-box;
+  font: inherit;
+  color: inherit;
+  border-bottom: 1px solid #f1f3f5;
+  transition: background 0.12s ease;
+}
+.topic-card:last-child { border-bottom: 0; }
+.topic-card:hover { background: #f4f7ff; }
+.topic-card-icon {
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background: #e8e0fe;
+  color: #1f1b2d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.topic-card-icon .material-symbols-outlined {
+  font-size: 30px;
+  font-variation-settings: 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.topic-card-text {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.topic-card-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: #181d26;
+  line-height: 1.25;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.topic-card-desc {
+  font-size: 13px;
+  color: #5b6470;
+  line-height: 1.4;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.topic-card-arrow {
+  flex: 0 0 auto;
+  color: #1967d2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.topic-card-arrow .material-symbols-outlined { font-size: 24px; }
+.topic-back {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.topic-back:hover { background: #eef2ff; }
+.topic-detail-title { flex: 1; margin: 0; font-size: 16px; font-weight: 700; color: #111; }
+.topic-detail-desc { padding: 8px 18px 0; color: #41454d; font-size: 13px; margin: 0; }
+.topic-notice {
+  margin: 12px 18px 0;
+  padding: 10px 12px;
+  background: #fff8e1;
+  border-left: 3px solid #f5b400;
+  font-size: 13px;
+  color: #5a4500;
+  white-space: pre-wrap;
+}
+.topic-entries { padding: 8px 18px 24px; display: flex; flex-direction: column; gap: 18px; }
+.entry { border-top: 1px solid #eee; padding-top: 12px; }
+.entry-name { margin: 0 0 4px; font-size: 14px; color: #181d26; font-weight: 700; font-family: inherit; }
+.entry-summary { margin: 0 0 8px; color: #41454d; font-size: 13px; line-height: 1.45; }
+.entry-details {
+  margin: 0 0 10px;
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 13px;
+  color: #333840;
+  line-height: 1.55;
+  background: transparent;
+  padding: 0;
+}
+.entry-example { margin: 8px 0; }
+.entry-example-desc { margin: 0 0 4px; font-size: 12px; color: #5b6470; }
+.entry-example-code {
+  margin: 0;
+  padding: 10px 12px;
+  background: #0d1b2a;
+  color: #d6e3ff;
+  font-family: 'JetBrains Mono', 'Roboto Mono', Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.45;
+  border-radius: 4px;
+  overflow-x: auto;
+  white-space: pre;
+}
+.topic-loading,
+.topic-empty,
+.topic-error { padding: 24px; color: #5b6470; font-size: 13px; }
+.topic-error { color: #aa2d00; }
+
+/* Tutorial-editor (admin) — full-screen 3-column layout, replaces
+   the main app shell when /#/admin is the active route. */
+.admin-app {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+  color: #181d26;
+  font-family: 'OpenSans', system-ui, sans-serif;
+  z-index: 100;
+}
+.admin-toolbar {
+  flex: 0 0 56px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 18px;
+  background: #fff;
+  border-bottom: 1px solid #e0e2e6;
+}
+.admin-toolbar h1 { font-size: 16px; margin: 0; font-weight: 700; }
+.admin-toolbar .spacer { flex: 1; }
+.admin-toolbar select,
+.admin-toolbar button {
+  font: inherit;
+  padding: 6px 12px;
+  width: auto;
+  height: auto;
+  border: 1px solid #d0d3d9;
+  border-radius: 4px;
+  background: #fff;
+  color: #181d26;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+.admin-toolbar button.primary { background: #1967d2; color: #fff; border-color: #1967d2; }
+.admin-toolbar button.primary:disabled { opacity: 0.55; cursor: default; }
+.admin-toolbar .status { font-size: 12px; color: #5b6470; }
+.admin-toolbar .status.dirty { color: #aa2d00; font-weight: 600; }
+.admin-toolbar .status.error { color: #aa2d00; font-weight: 600; }
+
+.admin-grid {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 280px 1fr 360px;
+  gap: 0;
+  min-height: 0;
+}
+.admin-col {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  background: #fff;
+  border-right: 1px solid #e0e2e6;
+}
+.admin-col:last-child { border-right: 0; border-left: 1px solid #e0e2e6; }
+.admin-col h2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #5b6470;
+  padding: 12px 14px 8px;
+  margin: 0;
+}
+.admin-topic-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fff;
+  cursor: pointer;
+  border: 0;
+  width: 100%;
+  height: auto;
+  box-sizing: border-box;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+.admin-topic-row:hover { background: #f4f7ff; }
+.admin-topic-row.is-selected { background: #e8f0fe; }
+.admin-topic-row .title { flex: 1; font-weight: 600; font-size: 13px; }
+.admin-topic-row .actions { display: flex; gap: 2px; }
+.admin-topic-row .actions button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  color: #5b6470;
+}
+.admin-topic-row .actions button:hover { background: #d6e3ff; color: #1967d2; }
+.admin-add {
+  margin: 8px 12px 16px;
+  padding: 6px 10px;
+  width: auto;
+  height: auto;
+  background: #e8f0fe;
+  color: #1967d2;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+}
+
+.admin-form { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.admin-field { display: flex; flex-direction: column; gap: 4px; }
+.admin-field label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: #5b6470; }
+.admin-field input,
+.admin-field textarea {
+  font: inherit;
+  padding: 6px 8px;
+  border: 1px solid #d0d3d9;
+  border-radius: 3px;
+  background: #fff;
+  color: #181d26;
+  resize: vertical;
+}
+.admin-field textarea { min-height: 60px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; }
+.admin-field textarea.code { background: #0d1b2a; color: #d6e3ff; border-color: #0d1b2a; }
+
+.admin-entry {
+  border: 1px solid #e0e2e6;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+  background: #fff;
+}
+.admin-entry-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.admin-entry-header .title { flex: 1; font-weight: 700; font-size: 13px; }
+.admin-entry-header button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 3px;
+  color: #5b6470;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.admin-entry-header button:hover { background: #f0f0f0; color: #aa2d00; }
+
+.admin-example {
+  border-top: 1px dashed #e0e2e6;
+  padding-top: 8px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-preview {
+  padding: 16px;
+  font-size: 13px;
+  background: #fff;
+}
+.admin-preview h3 { margin: 0 0 6px; font-size: 14px; }
+.admin-preview .preview-block { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+
+.app-sidebar {
+  position: relative;
+  /* Width is provided by an inline style from views/components/sidebar.js
+     (state.sidebarWidth, clamped 180–600). The values below are fallbacks
+     for the brief moment before that style is applied. */
+  flex: 0 0 400px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  background: #fafafa;
+  border-right: 1px solid #ddd;
+  transition: flex-basis 0.22s ease, width 0.22s ease;
+  overflow: visible;
+  min-height: 0;
+}
+/* Disable the collapse transition while the user is dragging the resizer —
+   otherwise every mousemove fight the easing curve and the drag feels laggy. */
+body.is-resizing-sidebar .app-sidebar { transition: none; }
+.app-sidebar.collapsed {
+  flex: 0 0 0 !important;
+  width: 0 !important;
+  border-right-width: 0;
+}
+
+/* Vertical drag handle that sits between the sidebar and the editor area.
+   4px wide hit target; the inner ::before line is what the user sees so
+   the visual stays slim while the click target is forgiving. */
+.sidebar-resizer {
+  position: relative;
+  flex: 0 0 4px;
+  width: 4px;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 4;
+  user-select: none;
+}
+.sidebar-resizer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 1px;
+  width: 1px;
+  background: #ddd;
+  transition: background 0.12s ease, width 0.12s ease, left 0.12s ease;
+}
+.sidebar-resizer:hover::before,
+body.is-resizing-sidebar .sidebar-resizer::before {
+  background: #4285F4;
+  width: 2px;
+  left: 1px;
+}
+.sidebar-resizer.is-hidden {
+  display: none;
+}
+body.is-resizing-sidebar {
+  cursor: col-resize;
+  user-select: none;
+}
+.app-sidebar.collapsed > :not(.sidebar-toggle) {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s;
+}
+
+/* Settings panel — rendered inside the left sidebar via the activity-bar
+   settings tab. Matches the topic-list panel layout (sticky header + a
+   scrollable body) so it slots in alongside the other sidebar panels. */
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+  overflow: hidden;
+}
+.settings-panel-body {
+  flex: 1 1 auto;
+  padding: 14px 18px;
+  overflow-y: auto;
+  min-height: 0;
+}
+.settings-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.settings-card-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 8px;
+}
+.settings-card-body {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.settings-select {
+  flex: 1;
+  padding: 6px 8px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+}
+.settings-apply {
+  width: auto;
+  height: auto;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #4285F4;
+  color: #fff;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+button.settings-apply:hover { background: #3367d6; border-radius: 4px; }
+/* When collapsed the sidebar itself is 0px wide. Pin the toggle inside the
+   viewport (left edge) so it remains clickable to re-expand. */
+.app-sidebar.collapsed .sidebar-toggle {
+  right: auto;
+  left: 4px;
+}
+
+.sidebar-logo {
+  flex: 0 0 auto;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+}
+.sidebar-logo img {
+  display: block;
+  height: 40px;
+  width: auto;
+}
+
+.sidebar-files {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.sidebar-toggle {
+  position: absolute;
+  top: 50%;
+  right: -14px;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  z-index: 5;
+  padding: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.sidebar-toggle:hover {
+  background: #f0f0f0;
+  color: #000;
+}
+.sidebar-toggle .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.app-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.working-area {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+#navigation-bar {
+  display: flex;
+  width: 100%;
+  background: #4285F4;
+  align-items: center;
+}
+
+/* Logo slot fills the same width as the sidebar (400px) so the toolbar
+   buttons always start at the editor's left edge below. When the sidebar
+   collapses we shrink the logo slot to match, keeping the alignment. */
+#app-logo {
+  flex: 0 0 400px;
+  width: 400px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: flex-basis 0.22s ease, width 0.22s ease, padding 0.22s ease;
+}
+#navigation-bar.sidebar-collapsed #app-logo {
+  flex: 0 0 0;
+  width: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+#app-logo img {
+  display: block;
+  height: 40px;
+  width: auto;
+}
+
+#toolbar {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 10px 6px 10px;
+  align-items: center;
+  gap: 16px;
+  align-self: stretch;
+  background: #4285F4;
+}
+
+/* Toolbar icons are dark SVGs on a blue background — force them to white.
+   Scoped to #toolbar so sidebar / file-action icons stay dark on light bg. */
+#toolbar button .icon {
+  filter: brightness(0) invert(1);
+}
+
+#toolbar .button {
+  padding-top: 5px;
+}
+
+#toolbar .toolbar-version {
+  margin-left: auto;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.9;
+  user-select: none;
+}
+
+#toolbar .button:last-child {
+  margin-right: -4px;
+}
+
+#toolbar .button:nth-last-child(-n+2) button {
+  width: 31.5px;
+  height: 31.5px;
+}
+#toolbar .button:nth-last-child(-n+2) .label {
+  display: none;
+}
+
+#app-views {
+  display: flex;
+  padding: 16px 10px 10px 10px;
+  width: 120px;
+  /* gap: 16px; */
+}
+
+#app-views .button{
+  flex-grow: 1;
+  width: 100%;
+}
+
+#app-views .button button{
+  width: 100%
+}
+
+#app-views .button .label{
+  
+}
+#app-views .button .label.selected{
+  font-weight: bold;
+}
+
+#app-views div:first-child button{
+  border-radius: 8px 0px 0px 8px;
+  
+}
+#app-views div:last-child button{
+  border-radius: 0px 8px 8px 0px;
+  
+}
+
+.separator {
+  height: 100%;
+  min-width: 1px;
+  flex-basis: fit-content;
+  background: #fff;
+  opacity: 0.7;
+  position: relative;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  height: 65%;
+}
+
+#tabs {
+  display: flex;
+  padding: 10px 10px 0px 60px;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  background: #ECF1F1;
+  font-size: 14px;
+}
+
+.tab {
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  align-self: stretch;
+  cursor: pointer;
+  background: #DAE3E3;
+  overflow: hidden;
+  transition: all 0.1s;
+}
+
+.tab:hover {
+  background: #e3eaea;
+}
+
+.tab.active {
+  background: #FFF;
+}
+
+.tab .icon {
+  height: 16px;
+}
+.tab .text {
+  color: #000;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.3em;
+  flex: 1 0 0;
+  max-width: calc(100% - 46px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.tab .options {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  cursor: pointer;
+  height: 16px;
+  width: 16px;
+}
+.tab .options button {
+  background: none;
+  width: 100%;
+  height: 100%;
+}
+.tab .options button .icon {
+  width: 100%;
+  height: 100%;
+}
+.tab .options:hover button,
+.tab .options button:hover {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 0;
+}
+
+.tab .text input {
+  box-sizing: border-box;
+  border: none;
+  border-radius: none;
+  height: 100%;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  font-family: inherit;
+  font-size: inherit;
+  outline-color: #F4BA00;
+}
+
+#code-editor {
+  flex: 1 0 0;
+  align-self: stretch;
+  font-size: var(--editor-font-size, 16px);
+  height: 100%;
+  overflow: hidden;
+
+}
+
+#code-editor * {
+  font-family: "CodeFont", monospace;
+}
+#code-editor .cm-editor {
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+
+#code-editor .cm-content {
+  padding-top: 16px;
+}
+#code-editor .cm-line {
+  padding-left: 16px;
+}
+
+#code-editor .cm-gutters {
+  background-color: #ECF1F1;
+  border-right: none;
+  width: 60px;
+  font-size: 0.875em;
+}
+
+#code-editor .cm-activeLineGutter {
+  background-color: #DAE3E3;
+}
+
+#code-editor .cm-gutter {
+  width: 75%;
+}
+#code-editor .cm-foldGutter {
+  width: 25%;
+}
+#code-editor .cm-gutterElement {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+#code-editor .cm-gutterElement span[title="Fold line"] {
+  padding-bottom: 8px;
+}
+
+#code-editor .cm-activeLine {
+  background-color: transparent;
+}
+
+.panel-container {
+  display: contents;
+}
+
+#panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  position: relative;
+  z-index: 15;
+  background: #0d1b2a;
+  overflow: hidden;
+  min-height: 0;
+  transition: height 0.5s ease, min-height 0.5s ease;
+}
+
+#panel.open {
+  min-height: 32px;
+}
+
+#panel.resizing {
+  transition: none;
+}
+
+/* Floating handle shown when the terminal panel is fully hidden.
+   Mirrors the sidebar toggle style — round, soft shadow. Anchored to
+   the viewport's bottom-right corner so it sits clear of the sidebar
+   and content regardless of layout. */
+.panel-reopen-handle {
+  position: fixed;
+  bottom: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  padding: 0;
+  z-index: 20;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+}
+.panel-reopen-handle.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.2s ease 0.4s, visibility 0s linear 0.4s;
+}
+.panel-reopen-handle:hover {
+  background: #f0f0f0;
+  color: #000;
+}
+.panel-reopen-handle .material-symbols-outlined {
+  font-size: 22px;
+}
+
+#panel.dialog-open {
+  pointer-events: none;
+}
+
+#panel #drag-handle {
+  flex-grow: 2;
+  height: 100%;
+  cursor: grab;
+  position: absolute;
+  width: 100%;
+}
+
+#panel #drag-handle:active {
+  cursor: grabbing;
+}
+
+.panel-bar {
+  display: flex;
+  height: 32px;
+  padding: 0px 10px;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  background: #0d1b2a;
+  position: relative;
+  font-size: 12px;
+  box-shadow: 0 -4px 10px -2px rgba(0, 0, 0, 0.15);
+}
+
+.panel-bar #connection-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+}
+
+.panel-bar #connection-status img {
+  width: 1.5em;
+  height: 1.5em;
+  filter: brightness(0) invert(1);
+}
+
+/* Icons of the small buttons on the right (copy / paste / clear / toggle)
+   — force them to white to match the rest of the panel bar. */
+.panel-bar button .icon {
+  filter: brightness(0) invert(1);
+}
+
+.panel-bar .spacer {
+  flex-grow: 1;
+}
+.panel-bar .term-operations {
+  transition: opacity 0.15s;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+}
+
+.panel-bar .term-operations.hidden {
+  opacity: 0;
+  transition-delay: 0.15s;
+  pointer-events: none;
+}
+.panel-bar .term-operations.visible {
+  opacity: 1;
+  transition-delay: 0.15s;
+}
+
+.terminal-wrapper {
+  width: 97%;
+  margin-left: 2%;
+  overflow: hidden;
+  position: absolute;
+  top: 60px; /* 45 + 15 */
+  height: calc(100% - 75px);
+}
+
+.terminal-enabled,
+.terminal-disabled {
+  width: 100%;
+}
+.terminal-disabled {
+  opacity: 0.5;
+}
+
+/* Override xterm.css default (overflow-y: scroll, always visible) so the
+   terminal's vertical scrollbar only appears when the buffer exceeds the
+   visible area. */
+.xterm .xterm-viewport {
+  overflow-y: auto;
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition: opacity 0.15s;
+  border: none;
+  background: none;
+  font-size: 24px;
+  font-style: normal;
+  line-height: normal;
+  background: rgba(236, 241, 241, 0.50);
+  /* Sits above sidebar elements (.device-header .text::before z-index:98,
+     .sidebar-toggle z-index:5) so the backdrop properly covers them. */
+  z-index: 9999;
+}
+
+.dialog.open {
+  opacity: 1;
+  pointer-events: inherit;
+  transition: opacity 0.15s;
+}
+
+
+
+.dialog .dialog-content {
+  display: flex;
+  width: 576px;
+  padding: 36px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  background: #FFF;
+  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+              0px 3px 1px -2px rgba(0, 0, 0, 0.12),
+              0px 1px 5px 0px rgba(0, 0, 0, 0.20);
+  transform: translateY(20px);
+  transition: transform 0.15s;
+}
+
+.dialog.open .dialog-content {
+  transform: translateY(0px);
+  transition: transform 0.15s;
+}
+
+
+.dialog .dialog-content #file-name {
+  font-size: 1.3em;
+  width:100%;
+  font-family: "CodeFont", monospace;
+}
+
+.dialog .dialog-content input:focus {
+  outline-color: #4285F4;
+}
+.dialog .dialog-content .item {
+  border-radius: 4.5px;
+  display: flex;
+  padding: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+  cursor: pointer;
+}
+
+.dialog .dialog-content .item:hover {
+  background: #4285F4;
+  color: #ffffff;
+}
+
+.dialog .buttons-horizontal {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  gap: 12px;
+}
+.dialog .buttons-horizontal .item {
+  flex-basis: 50%;
+  align-items: center;
+  background-color: #eee;;
+}
+
+.dialog-title{
+  width: 100%;
+  font-size: 0.8em;
+  padding: 0;
+  margin: 0;
+  flex-basis: max-content;
+}
+
+/* ----------------------------------------------------------------------
+   New File Dialog — aligned to the AppDialog (bridges/web/dialog.js)
+   visual design: title bar with bold title + X close + bottom divider,
+   body with input, text-only action buttons (primary bold blue,
+   secondary gray). Scoped via #dialog-new-file so the legacy .dialog
+   rules above still apply to other callers.
+   ---------------------------------------------------------------------- */
+#dialog-new-file.dialog {
+  background: rgba(0, 0, 0, 0.45);
+}
+#dialog-new-file .dialog-content {
+  width: 460px;
+  padding: 0;
+  align-items: stretch;
+  gap: 0;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+#dialog-new-file .dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px 12px;
+  gap: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+#dialog-new-file .dialog-header .dialog-title {
+  width: auto;
+  flex: 1;
+  font-weight: 700;
+  font-size: 22.5px;
+  color: #111;
+  text-align: left;
+}
+#dialog-new-file .dialog-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 2px 2px 8px;
+  color: #d32f2f;
+  font-size: 30px;
+  line-height: 1;
+}
+#dialog-new-file .dialog-close:hover { color: #a10e0e; }
+#dialog-new-file .dialog-body {
+  padding: 14px 18px;
+}
+#dialog-new-file .dialog-body #file-name {
+  width: 100%;
+  font-size: 18px;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: "CodeFont", monospace;
+}
+#dialog-new-file .dialog-body #file-name:focus {
+  outline-color: #4285F4;
+}
+#dialog-new-file .dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 80px;
+  padding: 10px 18px 14px;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+#dialog-new-file .dialog-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 12px;
+  font-family: inherit;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #888;
+  max-width: 100%;
+  /* Override the global 45x45 button sizing so multi-character labels
+     ("컴퓨터") render on a single line. */
+  width: auto;
+  height: auto;
+  white-space: nowrap;
+}
+#dialog-new-file .dialog-actions button:hover { color: #444; }
+#dialog-new-file .dialog-actions button.dialog-action-default {
+  font-weight: 700;
+  color: #1976d2;
+}
+#dialog-new-file .dialog-actions button.dialog-action-default:hover { color: #1565c0; }
+
+.dialog-feedback {
+  font-size: 0.6em;
+  align-self: stretch;
+  padding: 0.5em;
+  background: #eee;
+}
+
+#file-manager {
+  display: flex;
+  flex-direction: column;
+  padding: 2px 10px 0 10px;
+  justify-content: center;
+  align-items: stretch;
+  gap: 6px;
+  flex: 1 0 0;
+  align-self: stretch;
+}
+
+#board-files,
+#disk-files {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+  width: 100%;
+  min-height: 0;
+}
+/* Board file list takes the remaining space after the disk block. */
+#board-files {
+  flex: 1 1 0;
+}
+/* Disk file list is capped to roughly 3 file rows + header so the
+   board area gets the extra vertical space. */
+#disk-files {
+  flex: 0 0 320px;
+}
+
+#file-actions {
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  height: 32px;
+  padding: 2px 0;
+  margin: 0;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  align-self: center;
+  flex-shrink: 0;
+}
+
+#file-actions button[disabled], #file-actions button[disabled]:hover {
+  opacity: 0.4;
+}
+
+#file-actions button .icon {
+  width: 100%;
+  height: 100%;
+}
+
+#file-actions button:hover {
+  opacity: 0.5;
+}
+
+.device-header {
+  display: flex;
+  padding: 10px 0;
+  align-items: flex-start;
+  align-self: stretch;
+  width: 100%;
+  gap: 8px;
+}
+
+.device-header button {
+  width: 32px;
+  height: auto;
+  padding: 0;
+}
+
+.device-header .icon {
+  width: 22px;
+  height: 22px;
+}
+
+.device-header .text {
+  width: 100%;
+  height: 1.8em;
+  position: relative;
+  cursor: pointer;
+  color: #000;
+  font-family: "CodeFont", monospace;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.device-header .text span {
+  position: absolute;
+  right: 0;
+  min-width: calc(100% - 30px);
+  display: flex;
+  align-items: center;
+  padding-right: 10px;
+}
+
+
+.device-header .text::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(0.25turn, white 25%, rgba(0, 0, 0, 0));
+  z-index: 98;
+}
+
+.file-list {
+  display: flex;
+  align-items: flex-start;
+  flex: 1 0 0;
+  align-self: stretch;
+  background: #ECF1F1;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.file-list .list {
+  display: flex;
+  padding: 6px 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1 0 0;
+  align-self: stretch;
+  width: calc(100% - 40px);
+}
+
+.file-list .item {
+  display: flex;
+  height: 22px;
+  min-height: 22px;
+  max-height: 22px;
+  padding: 2px 10px;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  transition: all 0.1s;
+}
+
+.file-list .item.selected,
+.file-list .item:hover {
+  background: #FFF;
+}
+
+.file-list .item .options {
+  display: flex;
+  opacity: 0;
+  align-items: center;
+  align-self: stretch;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.file-list .item:hover .options {
+  opacity: 1;
+}
+
+.file-list .item .icon {
+  width: 32px;
+  height: 32px;
+}
+.file-list .item .text {
+  color: #000;
+  font-family: "CodeFont", monospace;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3em;
+}
+
+.file-list .item .checkbox .icon.off,
+.file-list .item .checkbox .icon.on {
+  display: none;
+}
+
+.file-list .item:hover .checkbox.unchecked .icon {
+  display: none;
+}
+.file-list .item:hover .checkbox.unchecked .icon.off {
+  display: block;
+}
+
+.file-list .item .checkbox.checked .icon {
+  display: none;
+}
+.file-list .item .checkbox.checked .icon.on  {
+  display: block;
+}
+
+.file-list .item input {
+  box-sizing: border-box;
+  border: none;
+  border-radius: none;
+  height: 100%;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  font-family: inherit;
+  font-size: inherit;
+  outline-color: #F4BA00;
+}
+
+#code-editor .cm-panels {
+  border-color: #DAE3E3;
+  padding: 0 10px;
+  margin: 0;
+}
+#code-editor .cm-panels .cm-search {
+  display: flex;
+  align-items: center;
+  height: 45px;
+  padding: 0;
+  background: #ECF1F1;
+  gap: 10px;
+}
+#code-editor .cm-panels label {
+  display: none;
+}
+#code-editor .cm-panels input,
+#code-editor .cm-panels button {
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  width: auto;
+}
+#code-editor .cm-panels button {
+  border: none;
+  border-radius: none;
+  font-family: inherit;
+  background: none;
+}
+#code-editor .cm-panels input {
+  box-sizing: border-box;
+  padding: 0 10px;
+  border: none;
+  width: 100%;
+  background: rgba(255, 255, 255, 1.0);
+  font-family: inherit;
+  font-size: 14px;
+  outline-style: none;
+}
+#code-editor .cm-panels input:focus {
+  outline-style: solid;
+  outline-color: #F4BA00;
+
+}
+#code-editor .cm-panels [name="replace"],
+#code-editor .cm-panels [name="replace"],
+#code-editor .cm-panels [name="replaceAll"] {
+  display: none;
+}
+#code-editor .cm-panel.cm-search [name="close"] {
+  position: relative;
+}
+
+#overlay {
+  position: fixed;
+  display: flex;
+  background: transparent;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.25s;
+  pointer-events: none;
+  opacity: 0;
+  text-align: center;
+}
+
+#overlay.open {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  pointer-events: all;
+  cursor: wait;
+  opacity: 1;
+}
+
+#overlay.open > * {
+  background: white;
+  padding: 1.1em 1.8em;
+  border-radius: 8px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+  font-size: 1.25rem;
+}
+
+#overlay .overlay-message {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+}
+
+#overlay .overlay-spinner {
+  font-size: 1.6em;
+  line-height: 1;
+  animation: overlay-hourglass-flip 1.6s infinite;
+  transform-origin: 50% 50%;
+}
+
+@keyframes overlay-hourglass-flip {
+  0%, 40%   { transform: rotate(0deg); }
+  50%, 90%  { transform: rotate(180deg); }
+  100%      { transform: rotate(360deg); }
+}
+
+/* Install Package dialog */
+#dialog-install-package.dialog {
+  /* Dark backdrop specific to this dialog. Leaves the Connection / NewFile
+     dialogs with their original light backdrop. */
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.dialog .dialog-content.install-package-dialog {
+  width: 680px;
+  max-height: 80vh;
+  flex-direction: column;
+  /* Override the .dialog .dialog-content default of align-items: center so
+     children (title, search, list, options, URL row) fill the full width. */
+  align-items: stretch;
+  gap: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Close button — absolute inside the dialog content, top-right corner */
+.install-package-dialog .dialog-close-floating {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  color: #d32f2f;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  z-index: 10;
+}
+.install-package-dialog .dialog-close-floating:hover:not(:disabled) {
+  color: #a10e0e;
+}
+.install-package-dialog .dialog-close-floating:disabled {
+  color: #e7b3b3;
+  cursor: not-allowed;
+}
+.install-package-dialog .dialog-close-floating .material-symbols-outlined {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.install-package-dialog input[type="search"],
+.install-package-dialog input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 0.9em;
+}
+
+.install-package-dialog .package-list {
+  flex: 1 1 auto;
+  min-height: 160px;
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 4px;
+  background: #fafafa;
+}
+
+.install-package-dialog .package-empty {
+  padding: 20px;
+  text-align: center;
+  color: #888;
+  font-size: 0.85em;
+}
+
+.install-package-dialog .package-item {
+  padding: 8px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.install-package-dialog .package-info {
+  flex: 1;
+  min-width: 0;
+}
+.install-package-dialog .package-item:hover {
+  background: #e8f0fe;
+}
+.install-package-dialog .package-item.selected {
+  background: #4285F4;
+  color: white;
+  border-color: #4285F4;
+}
+.install-package-dialog .package-item.selected .package-source {
+  color: #d0e6e7;
+}
+
+.install-package-dialog .package-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+  align-items: center;
+}
+.install-package-dialog .package-action-btn {
+  background: transparent;
+  border: none;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: inherit;
+  padding: 0;
+}
+.install-package-dialog .package-action-btn:hover:not(:disabled) {
+  opacity: 0.75;
+}
+.install-package-dialog .package-action-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.install-package-dialog .package-action-btn .material-symbols-outlined {
+  font-size: 32px;
+}
+
+.install-package-dialog .package-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 0.9em;
+}
+.install-package-dialog .package-icon {
+  font-size: 20px;
+  color: inherit;
+  flex-shrink: 0;
+}
+.install-package-dialog .package-version {
+  font-size: 0.75em;
+  color: #888;
+  font-weight: 400;
+}
+.install-package-dialog .package-item.selected .package-version {
+  color: #d0e6e7;
+}
+.install-package-dialog .package-desc {
+  font-size: 0.8em;
+  color: #444;
+  margin-top: 2px;
+}
+.install-package-dialog .package-item.selected .package-desc {
+  color: #f0f6f6;
+}
+.install-package-dialog .package-source {
+  display: block;
+  font-size: 0.7em;
+  color: #888;
+  margin-top: 2px;
+  word-break: break-all;
+}
+
+.install-package-dialog .package-detail {
+  background: #f4f8f8;
+  border: 1px solid #d5e0e0;
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-size: 0.82em;
+}
+.install-package-dialog .package-detail-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.install-package-dialog .package-detail-row {
+  margin-top: 2px;
+  color: #333;
+}
+.install-package-dialog .package-detail-row code {
+  background: #e6ecec;
+  padding: 1px 4px;
+  border-radius: 3px;
+  word-break: break-all;
+}
+
+.install-package-dialog .install-options {
+  display: flex;
+  gap: 18px;
+  font-size: 0.85em;
+}
+.install-package-dialog .install-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.install-package-dialog .install-option.option-disabled {
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.install-package-dialog .install-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.install-package-dialog .install-primary {
+  padding: 10px 18px;
+  background: #4285F4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+.install-package-dialog .install-primary:hover:not(:disabled) {
+  background: #2E65C9;
+}
+.install-package-dialog .install-primary:disabled {
+  background: #b5cccd;
+  cursor: not-allowed;
+}
+
+.install-package-dialog .install-error {
+  background: #fdecea;
+  color: #7a1f15;
+  border: 1px solid #f1c0ba;
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-size: 0.8em;
+}
+.install-package-dialog .install-progress {
+  background: #e8f1f1;
+  border: 1px solid #bfd5d5;
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-size: 0.8em;
+  color: #225;
+}
+
+.notyf__toast.toast-board-disconnected .notyf__ripple {
+  background-color: #fff;
+}
+
+.editor-context-menu {
+  position: fixed;
+  z-index: 10000;
+  min-width: 160px;
+  padding: 4px 0;
+  background: #ffffff;
+  color: #1c1c1c;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  font-family: "OpenSans", sans-serif;
+  font-size: 13px;
+  user-select: none;
+}
+.editor-context-menu__item {
+  padding: 6px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.editor-context-menu__item:hover {
+  background: #eef3fa;
+}
+.editor-context-menu__item.is-disabled {
+  color: #a0a0a0;
+  cursor: default;
+}
+.editor-context-menu__item.is-disabled:hover {
+  background: transparent;
+}
+.editor-context-menu__sep {
+  height: 1px;
+  margin: 4px 0;
+  background: #e6e6e6;
+}
+
+/* Firmware uploader full-area panel — covers the .app-main region
+   (everything below the toolbar) while the toolbar itself stays
+   interactive. Sits above the right sidebar (z-index 10) but below
+   dialogs and the loading overlay (z-index 9999). */
+.firmware-uploader {
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+  /* Force a stacking context so descendants paint above sibling sidebar
+     content (which is positioned with z-index:auto and otherwise leaks
+     through). */
+  isolation: isolate;
+  background: #fff;
+  display: none;
+}
+.firmware-uploader.open {
+  display: flex;
+  flex-direction: column;
+}
+
+.firmware-uploader-titlebar {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background: #fff;
+  color: #1a1a1a;
+  font-weight: 600;
+  flex: 0 0 auto;
+}
+.firmware-uploader-title {
+  flex: 1 1 auto;
+  font-size: 20px;
+}
+.firmware-uploader-close {
+  background: transparent;
+  color: #d32f2f;
+  border: 0;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0 12px;
+  cursor: pointer;
+}
+.firmware-uploader-close:hover {
+  color: #b71c1c;
+}
+
+.firmware-uploader-body {
+  flex: 1 1 auto;
+  overflow: auto;
+
+  /* Design tokens scoped to the firmware uploader screen.
+     Ported from D:/wk_app/bbfirmup/src/index.css :root. */
+  --bg-primary: #f7f7f9;
+  --bg-secondary: #f1f1f4;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fafafa;
+  --border-color: #ececf0;
+  --border-strong: #d4d4d8;
+  --text-primary: #18181b;
+  --text-secondary: #52525b;
+  --text-muted: #a1a1aa;
+  --accent-primary: #f87171;
+  --accent-primary-light: #fca5a5;
+  --accent-green: #16a34a;
+  --accent-red: #ef4444;
+  --accent-purple: #c4b5fd;
+  --glow-primary: rgba(248, 113, 113, 0.1);
+  --glow-green: rgba(22, 163, 74, 0.1);
+  --glow-red: rgba(239, 68, 68, 0.08);
+  --glow-amber: rgba(253, 186, 116, 0.15);
+  --shadow-xs: 0 1px 2px rgba(17, 17, 17, 0.04);
+  --shadow-sm: 0 2px 6px rgba(17, 17, 17, 0.05), 0 1px 2px rgba(17, 17, 17, 0.04);
+  --radius-sm: 5px;
+  --radius-md: 5px;
+  --radius-lg: 5px;
+  --radius-pill: 999px;
+
+  background: var(--bg-primary);
+  padding: 14px 24px 16px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-primary);
+
+  /* Stack children vertically so the log panel can claim 70% of the
+     remaining vertical space (a sibling spacer takes the other 30%). */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Constrain the panel layout to a centred 1200px column even on
+   wide screens; the surrounding background still fills the rest. */
+.firmware-uploader-body > .layout,
+.firmware-uploader-body > .log-panel,
+.firmware-uploader-body > .log-spacer {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.firmware-uploader-body > .layout { flex: 0 0 auto; }
+.firmware-uploader-body > .log-panel {
+  /* flex-basis 50px gives the log panel a 50px head start before the
+     remaining vertical space is split with the spacer (7:1). */
+  flex: 7 1 50px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+}
+.firmware-uploader-body > .log-spacer { flex: 1 1 0; }
+.firmware-uploader-body .log-container.log-container-grow {
+  height: auto;
+  flex: 1 1 auto;
+}
+
+.firmware-uploader-body .layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.firmware-uploader-body .col-left,
+.firmware-uploader-body .col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.firmware-uploader-body .panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.firmware-uploader-body .panel-header {
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+}
+.firmware-uploader-body .panel-header h2 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+.firmware-uploader-body .panel-body {
+  padding: 14px 18px;
+}
+
+.firmware-uploader-body .setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.firmware-uploader-body .setting-row label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.firmware-uploader-body .setting-row select {
+  flex: 1;
+  max-width: 180px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+}
+.firmware-uploader-body .setting-row select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--bg-secondary);
+}
+
+.firmware-uploader-body .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.firmware-uploader-body .btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.firmware-uploader-body .btn-primary {
+  background: #4285F4;
+  color: #fff;
+  width: 100%;
+  padding: 12px 20px;
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+}
+.firmware-uploader-body .btn-primary:hover:not(:disabled) {
+  background: #2B6CD4;
+  box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+}
+.firmware-uploader-body .btn-danger {
+  background: #F5A623;
+  color: #000;
+  width: 100%;
+  padding: 12px 20px;
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.3);
+}
+.firmware-uploader-body .btn-danger:hover:not(:disabled) {
+  background: #D98C10;
+  color: #000;
+}
+.firmware-uploader-body .btn-upload {
+  background: #4285F4;
+  color: #fff;
+  width: 100%;
+  padding: 14px 24px;
+  font-size: 15px;
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+  flex-direction: row;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+.firmware-uploader-body .btn-upload:hover:not(:disabled) {
+  background: #2B6CD4;
+}
+.firmware-uploader-body .btn-upload .material-symbols-outlined {
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.firmware-uploader-body .btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+.firmware-uploader-body .btn-ghost:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  background: var(--bg-secondary);
+}
+.firmware-uploader-body .btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+.firmware-uploader-body .btn-connect {
+  margin-top: 4px;
+}
+
+.firmware-uploader-body .board-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 6px 10px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+.firmware-uploader-body .board-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 14px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+}
+.firmware-uploader-body .board-tab:hover {
+  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.04);
+}
+.firmware-uploader-body .board-tab.active {
+  color: #fff;
+  background: #b5b5b5;
+}
+.firmware-uploader-body .board-tab-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  border-radius: 4px;
+  opacity: 0.65;
+}
+.firmware-uploader-body .board-tab.active .board-tab-icon {
+  opacity: 1;
+}
+
+.firmware-uploader-body .version-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 260px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.firmware-uploader-body .version-card {
+  padding: 14px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  background: var(--bg-card);
+}
+.firmware-uploader-body .version-card:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-card-hover);
+}
+.firmware-uploader-body .version-card.selected {
+  border-color: #4285F4;
+  background: rgba(66, 133, 244, 0.1);
+  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.15);
+}
+.firmware-uploader-body .version-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.firmware-uploader-body .version-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.firmware-uploader-body .version-board-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 5px;
+  background: var(--bg-secondary);
+  padding: 4px;
+}
+.firmware-uploader-body .version-number {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-right: 8px;
+}
+.firmware-uploader-body .version-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+}
+.firmware-uploader-body .tag-stable {
+  background: var(--glow-green);
+  color: var(--accent-green);
+}
+.firmware-uploader-body .tag-legacy {
+  background: rgba(196, 181, 253, 0.25);
+  color: var(--accent-purple);
+}
+.firmware-uploader-body .version-date {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+}
+.firmware-uploader-body .version-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+}
+.firmware-uploader-body .version-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+.firmware-uploader-body .version-changelog {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+}
+.firmware-uploader-body .version-changelog ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.firmware-uploader-body .version-changelog li {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 3px 0 3px 16px;
+  position: relative;
+  line-height: 1.5;
+}
+.firmware-uploader-body .version-changelog li::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 10px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #4285F4;
+}
+
+.firmware-uploader-body .upload-panel .panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+.firmware-uploader-body .progress-container { width: 100%; }
+.firmware-uploader-body .progress-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.firmware-uploader-body .progress-pct {
+  font-family: 'JetBrains Mono', monospace;
+  color: #4285F4;
+  font-weight: 700;
+}
+.firmware-uploader-body .progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-secondary);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.firmware-uploader-body .progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #93b5f9, #4285F4);
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+.firmware-uploader-body .upload-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+}
+.firmware-uploader-body .upload-result.success {
+  background: var(--glow-green);
+  color: var(--accent-green);
+  border: 1px solid rgba(22, 163, 74, 0.2);
+}
+.firmware-uploader-body .upload-result.error {
+  background: var(--glow-red);
+  color: var(--accent-red);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+.firmware-uploader-body .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: firmware-uploader-spin 0.7s linear infinite;
+  display: inline-block;
+}
+@keyframes firmware-uploader-spin { to { transform: rotate(360deg); } }
+
+.firmware-uploader-body .help-text {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 10px 0 0 0;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* Match the IDE's REPL terminal panel (#panel { background: #0d1b2a }). */
+.firmware-uploader-body .log-panel {
+  background: #0d1b2a;
+  border: 1px solid #0d1b2a;
+}
+.firmware-uploader-body .log-panel .panel-header {
+  background: transparent;
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+.firmware-uploader-body .log-panel .panel-header h2 {
+  color: #e8edf5;
+}
+.firmware-uploader-body .log-panel .btn-ghost {
+  color: rgba(255, 255, 255, 0.6);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.firmware-uploader-body .log-panel .btn-ghost:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+.firmware-uploader-body .log-container {
+  height: 250px;
+  overflow-y: auto;
+  padding: 12px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.firmware-uploader-body .log-empty {
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  padding: 40px 0;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+}
+.firmware-uploader-body .log-entry {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 1px 0;
+}
+.firmware-uploader-body .log-time {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.firmware-uploader-body .log-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  min-width: 40px;
+  text-align: center;
+}
+.firmware-uploader-body .log-info .log-badge {
+  background: rgba(252, 165, 165, 0.2);
+  color: var(--accent-primary-light);
+}
+.firmware-uploader-body .log-success .log-badge {
+  background: rgba(22, 163, 74, 0.2);
+  color: #4ade80;
+}
+.firmware-uploader-body .log-warn .log-badge {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+.firmware-uploader-body .log-error .log-badge {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+.firmware-uploader-body .log-msg {
+  color: rgba(255, 255, 255, 0.78);
+  word-break: break-all;
+}
+.firmware-uploader-body .log-success .log-msg { color: #4ade80; }
+.firmware-uploader-body .log-error .log-msg   { color: #f87171; }
+.firmware-uploader-body .log-warn .log-msg    { color: #fbbf24; }
+
+@media (max-width: 820px) {
+  .firmware-uploader-body .layout { grid-template-columns: 1fr; }
+}
+
+/* Floating Run/Stop button — bottom-right of the editor view. Toggles
+   icon/color via .is-running and emits the same events as the toolbar.
+   `bottom` is set inline by RunFab() so the button rides above the REPL
+   panel as it opens / closes / resizes; the value here is a fallback.
+
+   NOTE: selectors are scoped under `button.run-fab` (not just `.run-fab`)
+   to outrank the global `button:not([disabled]):hover` rule above, which
+   otherwise rewrites the FAB's border-radius and background on hover. */
+button.run-fab {
+  position: fixed;
+  right: 32px;
+  bottom: 24px;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: none;
+  background: #16a34a;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: background 0.15s;
+}
+button.run-fab:hover              { background: #22c55e; border-radius: 50%; }
+button.run-fab.is-running         { background: #dc2626; border-radius: 50%; }
+button.run-fab.is-running:hover   { background: #ef4444; border-radius: 50%; }
+button.run-fab .icon {
+  width: 28px;
+  height: 28px;
+  filter: invert(1) brightness(2);
+  pointer-events: none;
+}

@@ -1,0 +1,1003 @@
+[
+  {
+    "id": "variable",
+    "title": "1. Variables",
+    "description": "How to use variables that name values",
+    "icon": "label",
+    "notice": "",
+    "entries": [
+      {
+        "name": "Data types",
+        "summary": "The kinds of values Python handles (int, float, str, bool, None).",
+        "details": "Values handled in a program have a kind (type). Get familiar with five common ones in Python first.\n\n1) Integer (int): a number with no decimal point. e.g., 0, 1, -7, 100\n2) Float (float): a number with a decimal point. e.g., 3.14, -0.5, 2.0\n3) String (str): characters wrapped in quotes. e.g., 'hello', \"hi\"\n4) Boolean (bool): only two values, True or False.\n5) None: a special value meaning \"no value\".\n\nThe same + operator behaves differently depending on the types involved.\n  - 1 + 2 → 3 (number addition)\n  - 'a' + 'b' → 'ab' (string concatenation)\nSo when using a variable, you need to know what type of value it holds.\nYou can check a value's type with the type() function.",
+        "examples": [
+          {
+            "code": "# The five basic types\na = 10            # Integer (int)\nb = 3.14          # Float (float)\nc = 'hello'       # String (str)\nd = True          # Boolean (bool)\ne = None          # No value (NoneType)\n\nprint(type(a))\nprint(type(b))\nprint(type(c))\nprint(type(d))\nprint(type(e))\n\n# The meaning of + changes depending on the types\nprint(1 + 2)\nprint('1' + '2')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "What is a variable",
+        "summary": "A variable is a label attached to a value.",
+        "details": "A program handles values like numbers, characters, and true/false.\nWriting the same value over and over is tedious, so we attach a name to a value and use it through that name.\nA name attached to a value like this is called a variable.\nIn Python, you put a value into a variable using the = sign. (Unlike math's =, it means \"store the value on the right into the name on the left\".)",
+        "examples": [
+          {
+            "code": "age = 12\nname = 'John Doe'\nprint(age)\nprint(name)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Creating a variable",
+        "summary": "Create a variable using the form: name = value.",
+        "details": "You do not need to declare a variable separately; it is created the moment you assign a value.\nWrite the variable name on the left, the value to store on the right, and = in between.\nYou can print the stored value with print() or use it again elsewhere.",
+        "examples": [
+          {
+            "code": "score = 95\nmessage = 'Hello'\npi = 3.14\nprint(score)\nprint(message)\nprint(pi)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Storing different types",
+        "summary": "A variable can hold any value: int, float, str, bool, etc.",
+        "details": "Python variables do not have a predeclared type. The type is decided by the value you store.\nInteger (int), float (float), string (str), and boolean (bool) all go into a variable the same way.",
+        "examples": [
+          {
+            "code": "count = 10\nheight = 175.5\ncity = 'Seoul'\nis_student = True\nprint(count)\nprint(height)\nprint(city)\nprint(is_student)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Changing a variable's value",
+        "summary": "Assigning a new value to the same variable replaces the old one.",
+        "details": "When you assign another value to an existing variable, the previous value is gone and overwritten by the new one.\nYou can also use the variable's own value to compute a new value (e.g., count = count + 1).",
+        "examples": [
+          {
+            "code": "score = 80\nprint(score)\n\nscore = 95\nprint(score)\n\nscore = score + 5\nprint(score)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Variable naming rules",
+        "summary": "Use letters, digits, and underscores (_); names cannot start with a digit.",
+        "details": "Rules to follow when choosing a variable name:\n1) Only letters, digits, and the underscore (_) are allowed.\n2) A name cannot start with a digit. (1name X, name1 O)\n3) Names are case-sensitive. (age and Age are different variables.)\n4) Python keywords (if, for, class, etc.) cannot be used as variable names.\nBy convention, multiple words are joined by underscores. (e.g., user_name, total_score)",
+        "examples": [
+          {
+            "code": "user_name = 'Gildong'\nuser_age = 12\ntotal_score = 95\nprint(user_name, user_age, total_score)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Assign to multiple variables at once",
+        "summary": "You can assign values to several variables on one line, like a, b = 1, 2.",
+        "details": "With commas, you can assign values to multiple variables on a single line.\nTo put the same value into several variables at once, you can chain them: a = b = c = 0.",
+        "examples": [
+          {
+            "code": "x, y, z = 1, 2, 3\nprint(x, y, z)\n\na = b = c = 0\nprint(a, b, c)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Check the type with type()",
+        "summary": "Use type() to check the type of the value held by a variable.",
+        "details": "type(variable) returns the type of the value the variable holds.\n<class 'int'> is integer, <class 'str'> is string, <class 'float'> is float, <class 'bool'> is boolean.",
+        "examples": [
+          {
+            "code": "a = 10\nb = 3.14\nc = 'hello'\nd = True\nprint(type(a))\nprint(type(b))\nprint(type(c))\nprint(type(d))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Calculations with variables",
+        "summary": "Variables can be added, subtracted, and multiplied together.",
+        "details": "Numeric variables can be combined with operators like +, -, *, /.\nString variables can be concatenated with + and repeated with * an integer.\nIt is convenient to store the result in another variable.",
+        "examples": [
+          {
+            "code": "price = 1500\ncount = 3\ntotal = price * count\nprint(total)\n\nfirst = 'John'\nlast = 'Doe'\nfull = first + last\nprint(full)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Swapping variable values",
+        "summary": "a, b = b, a swaps two variables' values in one line.",
+        "details": "Other languages use a temporary variable and three lines to swap,\nbut in Python, a, b = b, a swaps two variables' values in a single line.",
+        "examples": [
+          {
+            "code": "a = 10\nb = 20\nprint(a, b)\n\na, b = b, a\nprint(a, b)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "string",
+    "title": "2. Strings",
+    "description": "Quotes, indexing, slicing, and string methods",
+    "icon": "abc",
+    "notice": "",
+    "entries": [
+      {
+        "name": "Creating strings",
+        "summary": "Use single quotes (') or double quotes (\") to make a string.",
+        "details": "In Python, single and double quotes behave the same.\nTo put a quote inside a string, use the other kind of quote, or escape it with a backslash (\\).\nMulti-line strings are wrapped in triple quotes (\"\"\" or ''').",
+        "examples": [
+          {
+            "code": "s1 = 'hello'\ns2 = \"world\"\ns3 = \"I'm Python\"\ns4 = \"\"\"multi-line\nstring\"\"\"\nprint(s1, s2)\nprint(s3)\nprint(s4)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Indexing (positive)",
+        "summary": "Each character in a string is numbered starting from 0.",
+        "details": "You can access individual characters with a 0-based index.\ne.g., for s = \"good morning\", s[0] = \"g\", s[1] = \"o\" ...",
+        "examples": [
+          {
+            "code": "s = 'good morning'\nprint(s[0])\nprint(s[1])\nprint(s[5])",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Indexing (negative)",
+        "summary": "You can access from the end with -1, -2 ...",
+        "details": "A negative index counts from the end of the string.\ns[-1] is the last character; s[-2] is the second-to-last.",
+        "examples": [
+          {
+            "code": "s = 'good morning'\nprint(s[-1])\nprint(s[-2])\nprint(s[-7])",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Slicing",
+        "summary": "Use s[start:end] to take a substring.",
+        "details": "s[start:end] returns the substring from index start through end - 1.\nOmit start to begin from 0; omit end to go to the end.",
+        "examples": [
+          {
+            "code": "s = 'good morning'\nprint(s[0:4])\nprint(s[5:])\nprint(s[:4])\nprint(s[-3:])",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Slicing step",
+        "summary": "Specify a step with s[start:end:step].",
+        "details": "The third value is the step (interval). With step 2, you skip one character at a time.\nA negative step slices in reverse order.",
+        "examples": [
+          {
+            "code": "s = 'good morning'\nprint(s[::2])\nprint(s[1::2])\nprint(s[::-1])",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Length and concatenation",
+        "summary": "len() for length, + to concatenate, * to repeat.",
+        "details": "len(s) returns the number of characters in the string.\nThe + operator joins two strings; * an integer repeats the same string several times.",
+        "examples": [
+          {
+            "code": "s = 'good morning'\nprint(len(s))\nprint('hello' + ' ' + 'world')\nprint('ab' * 3)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Common methods",
+        "summary": "Get familiar with five: upper / lower / replace / split / strip.",
+        "details": "upper() : convert to all upper case\nlower() : convert to all lower case\nreplace(old, new) : replace a substring\nsplit(sep) : split by a separator into a list\nstrip() : remove whitespace from both ends",
+        "examples": [
+          {
+            "code": "s = '  Hello, Python!  '\nprint(s.upper())\nprint(s.lower())\nprint(s.strip())\nprint(s.replace('Python', 'World'))\nprint('a,b,c'.split(','))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Inserting values with f-strings",
+        "summary": "Use the form f\"... {variable} ...\" to embed variables in a string.",
+        "details": "Prefix the string with f and put a variable or expression inside curly braces {} to insert its value.\nSimple expressions can be written directly inside the braces.",
+        "examples": [
+          {
+            "code": "name = 'John Doe'\nage = 12\nprint(f'{name} is {age} years old.')\nprint(f'Next year, {name} will be {age + 1}.')",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "list",
+    "title": "3. Lists",
+    "description": "A mutable collection that holds values in order",
+    "icon": "list",
+    "notice": "",
+    "entries": [
+      {
+        "name": "Creating a list",
+        "summary": "Put comma-separated values inside square brackets [].",
+        "details": "A list is a data structure that holds several values in order.\nIt can mix values of different types, and you can change values after the list is created (mutable).",
+        "examples": [
+          {
+            "code": "nums = [1, 2, 3, 4, 5]\nfruits = ['apple', 'banana', 'grape']\nmixed = [1, 'hello', 3.14, True]\nempty = []\nprint(nums)\nprint(fruits)\nprint(mixed)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Indexing and slicing",
+        "summary": "Use [i] and [start:end] just like with strings.",
+        "details": "Lists also use 0-based indexing to access elements, and slicing to take a sublist.\nNegative indexing works the same way.",
+        "examples": [
+          {
+            "code": "nums = [10, 20, 30, 40, 50]\nprint(nums[0])\nprint(nums[-1])\nprint(nums[1:4])\nprint(nums[:3])",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "append / insert",
+        "summary": "append adds at the end; insert places at a chosen position.",
+        "details": "append(x) : add x to the end of the list\ninsert(i, x) : insert x at index i (later elements shift one place to the right)",
+        "examples": [
+          {
+            "code": "nums = [1, 2, 3]\nnums.append(4)\nprint(nums)\n\nnums.insert(0, 100)\nprint(nums)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "extend / + operator",
+        "summary": "Use them to combine two lists.",
+        "details": "extend(other) : append every element of other to the end (modifies the original)\na + b : returns a new list (originals unchanged)",
+        "examples": [
+          {
+            "code": "a = [1, 2, 3]\nb = [4, 5, 6]\na.extend(b)\nprint(a)\n\nc = [1, 2] + [3, 4]\nprint(c)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "remove / pop",
+        "summary": "remove deletes by value; pop removes and returns by index.",
+        "details": "remove(x) : remove the first element equal to x\npop(i) : remove the element at index i and return its value (defaults to the last)",
+        "examples": [
+          {
+            "code": "fruits = ['apple', 'banana', 'grape', 'banana']\nfruits.remove('banana')\nprint(fruits)\n\nlast = fruits.pop()\nprint(last)\nprint(fruits)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Sorting (sort, sorted)",
+        "summary": "sort sorts in place; sorted returns a new list.",
+        "details": "list.sort() : sorts the list in place (returns nothing)\nsorted(list) : returns a new sorted list (original unchanged)\nPass reverse=True to sort in descending order.",
+        "examples": [
+          {
+            "code": "nums = [3, 1, 4, 1, 5, 9, 2, 6]\nnums.sort()\nprint(nums)\n\nwords = ['banana', 'apple', 'cherry']\nprint(sorted(words))\nprint(sorted(words, reverse=True))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Length and in",
+        "summary": "len for the count, in for membership.",
+        "details": "len(list) : returns the number of elements\nx in list : True if x is in the list, False otherwise",
+        "examples": [
+          {
+            "code": "nums = [10, 20, 30, 40]\nprint(len(nums))\nprint(20 in nums)\nprint(99 in nums)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Nested lists",
+        "summary": "You can put lists inside a list to make a 2D table.",
+        "details": "Nested lists are often used for matrix or table-like data.\nAccess elements by indexing twice, like matrix[i][j].",
+        "examples": [
+          {
+            "code": "matrix = [\n    [1, 2, 3],\n    [4, 5, 6],\n    [7, 8, 9],\n]\nprint(matrix[0])\nprint(matrix[1][2])",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tuple",
+    "title": "4. Tuples",
+    "description": "A grouping of values that cannot be changed",
+    "icon": "lock",
+    "notice": "",
+    "entries": [
+      {
+        "name": "Creating a tuple",
+        "summary": "Put comma-separated values inside parentheses ().",
+        "details": "A tuple is similar to a list, but once created, its values cannot be changed (immutable).\nEven without parentheses, just commas alone create a tuple.",
+        "examples": [
+          {
+            "code": "t1 = (1, 2, 3)\nt2 = 4, 5, 6\nempty = ()\nprint(t1)\nprint(t2)\nprint(type(t2))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "A single-element tuple needs a comma",
+        "summary": "Add a comma like (x,) to make it a tuple.",
+        "details": "With only parentheses and no comma, it is treated as a parenthesized expression, not a tuple.\nA tuple with one element must end with a comma.",
+        "examples": [
+          {
+            "code": "not_tuple = (5)\nprint(type(not_tuple))\n\nreal_tuple = (5,)\nprint(type(real_tuple))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Immutability",
+        "summary": "Tuple elements cannot be changed, added, or removed.",
+        "details": "Trying to change a tuple element raises a TypeError.\nUse tuples when values must never change (coordinates, settings, etc.).",
+        "examples": [
+          {
+            "code": "point = (3, 4)\nprint(point[0], point[1])\n\n# Uncomment the line below to see the TypeError\n# point[0] = 100",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Indexing and slicing",
+        "summary": "You can use [i] and [start:end] exactly as with lists.",
+        "details": "Behaves the same as a list except that it is read-only.",
+        "examples": [
+          {
+            "code": "t = (10, 20, 30, 40, 50)\nprint(t[0])\nprint(t[-1])\nprint(t[1:4])",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Tuple unpacking",
+        "summary": "Distribute values into several variables at once.",
+        "details": "The number of variables on the left must match the number of elements in the tuple on the right.\nIt is also handy when swapping two values.",
+        "examples": [
+          {
+            "code": "point = (3, 4)\nx, y = point\nprint(x, y)\n\na, b = 1, 2\na, b = b, a\nprint(a, b)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Returning multiple values from a function",
+        "summary": "Returning several values from a function packs them into a tuple.",
+        "details": "If you list comma-separated values after return, they are bundled into a tuple.\nThe caller can receive them with unpacking.",
+        "examples": [
+          {
+            "code": "def min_max(nums):\n    return min(nums), max(nums)\n\nlo, hi = min_max([3, 1, 4, 1, 5, 9, 2, 6])\nprint(lo, hi)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dict",
+    "title": "5. Dictionaries",
+    "description": "Store data as key-value pairs",
+    "icon": "data_object",
+    "notice": "",
+    "entries": [
+      {
+        "name": "Creating a dictionary",
+        "summary": "Put comma-separated key: value pairs inside curly braces {}.",
+        "details": "A dictionary is a data structure that looks up values by their keys.\nKeys are usually immutable values like strings or numbers.",
+        "examples": [
+          {
+            "code": "student = {\n    'name': 'John Doe',\n    'age': 12,\n    'grade': 6,\n}\nempty = {}\nprint(student)\nprint(empty)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Getting a value by its key",
+        "summary": "Access a value with dict[key].",
+        "details": "dict[key] : raises KeyError if the key is missing\ndict.get(key) : returns None if the key is missing (safe)\ndict.get(key, default) : returns default when the key is missing.",
+        "examples": [
+          {
+            "code": "student = {'name': 'John Doe', 'age': 12}\nprint(student['name'])\nprint(student.get('grade'))\nprint(student.get('grade', 0))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Adding and updating values",
+        "summary": "Use dict[key] = value to add or overwrite.",
+        "details": "Assigning to a key that does not exist adds a new entry.\nAssigning to an existing key overwrites the old value.",
+        "examples": [
+          {
+            "code": "student = {'name': 'John Doe', 'age': 12}\nstudent['grade'] = 6\nprint(student)\n\nstudent['age'] = 13\nprint(student)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Deleting an entry",
+        "summary": "Use del or pop to remove a key-value pair.",
+        "details": "del dict[key] : remove that key-value pair\ndict.pop(key) : remove it and return the value",
+        "examples": [
+          {
+            "code": "student = {'name': 'John Doe', 'age': 12, 'grade': 6}\ndel student['grade']\nprint(student)\n\nage = student.pop('age')\nprint(age)\nprint(student)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "keys / values / items",
+        "summary": "Get the list of keys, values, or (key, value) pairs.",
+        "details": "dict.keys() : returns all keys\ndict.values() : returns all values\ndict.items() : returns all (key, value) pairs",
+        "examples": [
+          {
+            "code": "student = {'name': 'John Doe', 'age': 12, 'grade': 6}\nprint(list(student.keys()))\nprint(list(student.values()))\nprint(list(student.items()))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Checking key existence with in",
+        "summary": "Use key in dict to test whether a key is present.",
+        "details": "The in operator checks the dictionary's keys (not its values).\nChecking before access keeps you safe from KeyError.",
+        "examples": [
+          {
+            "code": "student = {'name': 'John Doe', 'age': 12}\nprint('name' in student)\nprint('grade' in student)\nif 'age' in student:\n    print(student['age'])",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Iterating with for",
+        "summary": "Use items() to take both key and value at once.",
+        "details": "for k, v in dict.items() : receive key and value together\nfor k in dict : iterate over keys only (the default)",
+        "examples": [
+          {
+            "code": "student = {'name': 'John Doe', 'age': 12, 'grade': 6}\nfor key, value in student.items():\n    print(f'{key} → {value}')",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "set",
+    "title": "6. Sets",
+    "description": "A collection of values with no duplicates",
+    "icon": "join_inner",
+    "notice": "",
+    "entries": [
+      {
+        "name": "Creating a set",
+        "summary": "Make one with curly braces {} or set().",
+        "details": "A set does not allow duplicates and has no order.\nTo create an empty set, use set() — not {} (which makes an empty dictionary).",
+        "examples": [
+          {
+            "code": "s1 = {1, 2, 3, 4}\ns2 = set([3, 4, 5, 6])\nempty = set()\nprint(s1)\nprint(s2)\nprint(empty)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Automatic duplicate removal",
+        "summary": "Converting a list to a set removes duplicates.",
+        "details": "A set never holds the same value twice, so it is often used to drop duplicates from a list.\nNote that the original order is not guaranteed.",
+        "examples": [
+          {
+            "code": "nums = [1, 2, 2, 3, 3, 3, 4]\nunique = set(nums)\nprint(unique)\nprint(list(unique))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "add / remove",
+        "summary": "add inserts; remove deletes.",
+        "details": "add(x) : add x to the set (no change if already present)\nremove(x) : remove x (KeyError if missing)\ndiscard(x) : remove x (no error even if missing)",
+        "examples": [
+          {
+            "code": "s = {1, 2, 3}\ns.add(4)\ns.add(2)\nprint(s)\n\ns.remove(1)\ns.discard(99)\nprint(s)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Union (union, |)",
+        "summary": "Combine two sets to gather all elements.",
+        "details": "a | b or a.union(b) returns a new set with every element from both sets.",
+        "examples": [
+          {
+            "code": "a = {1, 2, 3}\nb = {3, 4, 5}\nprint(a | b)\nprint(a.union(b))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Intersection (intersection, &)",
+        "summary": "Keep only elements present in both sets.",
+        "details": "a & b or a.intersection(b) returns a new set of elements common to both sets.",
+        "examples": [
+          {
+            "code": "a = {1, 2, 3, 4}\nb = {3, 4, 5, 6}\nprint(a & b)\nprint(a.intersection(b))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Difference (difference, -)",
+        "summary": "Keep elements that are in a but not in b.",
+        "details": "a - b or a.difference(b) returns a new set with the elements of a minus those of b.",
+        "examples": [
+          {
+            "code": "a = {1, 2, 3, 4}\nb = {3, 4, 5, 6}\nprint(a - b)\nprint(b - a)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Membership with in",
+        "summary": "Use x in s to quickly test whether x is in the set.",
+        "details": "in on a set is much faster than on a list (average O(1)). Use sets when frequent lookups matter.",
+        "examples": [
+          {
+            "code": "s = {'apple', 'banana', 'grape'}\nprint('apple' in s)\nprint('watermelon' in s)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "if",
+    "title": "7. Conditionals",
+    "description": "Control flow with if / elif / else",
+    "icon": "fork_right",
+    "notice": "",
+    "entries": [
+      {
+        "name": "Basic if",
+        "summary": "Run the inner block only when the condition is true.",
+        "details": "Python uses indentation to mark blocks (typically 4 spaces).\nPut a colon (:) after the condition and indent the next line.",
+        "examples": [
+          {
+            "code": "score = 85\nif score >= 60:\n    print('Pass')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "if / else",
+        "summary": "Write what should run when the condition is false in else.",
+        "details": "If the if condition is False, the else block runs. Exactly one of the two branches runs.",
+        "examples": [
+          {
+            "code": "score = 50\nif score >= 60:\n    print('Pass')\nelse:\n    print('Fail')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "if / elif / else",
+        "summary": "Check several conditions in order from top to bottom.",
+        "details": "Only the first branch that becomes true runs; the rest are skipped.\nYou can chain several elifs, and the final else is optional.",
+        "examples": [
+          {
+            "code": "score = 75\nif score >= 90:\n    grade = 'A'\nelif score >= 80:\n    grade = 'B'\nelif score >= 70:\n    grade = 'C'\nelse:\n    grade = 'F'\nprint(grade)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Comparison operators",
+        "summary": "Compare two values with ==, !=, <, <=, >, >=.",
+        "details": "== (equal), != (not equal), < (less than), <= (less or equal), > (greater than), >= (greater or equal).\nA comparison always evaluates to True or False.",
+        "examples": [
+          {
+            "code": "a = 10\nb = 20\nprint(a == b)\nprint(a != b)\nprint(a < b)\nprint(a <= 10)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Logical operators (and, or, not)",
+        "summary": "Combine conditions or invert the result.",
+        "details": "and : true only if both are true\nor  : true if at least one is true\nnot : flip true/false",
+        "examples": [
+          {
+            "code": "age = 15\nscore = 85\nif age >= 13 and score >= 80:\n    print('Assigned to advanced class')\n\nis_holiday = False\nif not is_holiday:\n    print('Today is a weekday')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Nested conditionals",
+        "summary": "You can place an if inside another if.",
+        "details": "The inner condition is checked only when the outer one is true.\nDeep indentation hurts readability, so split things up when nesting gets deep.",
+        "examples": [
+          {
+            "code": "score = 85\nattendance = 95\nif score >= 60:\n    if attendance >= 80:\n        print('Pass')\n    else:\n        print('Attendance too low')\nelse:\n    print('Score too low')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Conditional expression (ternary)",
+        "summary": "Write A if condition else B on a single line.",
+        "details": "A simple if/else can be shortened to one line.\nUseful when assigning the result directly to a variable or passing it as a function argument.",
+        "examples": [
+          {
+            "code": "score = 75\nresult = 'Pass' if score >= 60 else 'Fail'\nprint(result)\n\nn = -3\nabs_n = n if n >= 0 else -n\nprint(abs_n)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "comprehension",
+    "title": "8. List comprehensions",
+    "description": "Build lists, dicts, and sets in a single line",
+    "icon": "auto_awesome",
+    "notice": "",
+    "entries": [
+      {
+        "name": "Basic form",
+        "summary": "Build a list with [expression for variable in iterable].",
+        "details": "You can shorten the loop that fills a list into a single line.\nThe expression on the left is applied to each element to form the new list.",
+        "examples": [
+          {
+            "code": "# Build with a for loop\nsquares = []\nfor i in range(1, 6):\n    squares.append(i * i)\nprint(squares)\n\n# Build with a comprehension (same result)\nsquares2 = [i * i for i in range(1, 6)]\nprint(squares2)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Conditional filter",
+        "summary": "Append an if to keep only the elements you want.",
+        "details": "[expression for variable in iterable if condition] — only elements that satisfy the condition pass through.",
+        "examples": [
+          {
+            "code": "nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nevens = [n for n in nums if n % 2 == 0]\nprint(evens)\n\nwords = ['apple', 'banana', 'cherry', 'kiwi']\nshort = [w for w in words if len(w) <= 5]\nprint(short)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "if-else inside the expression",
+        "summary": "An if-else inside the expression transforms every element.",
+        "details": "A trailing if (filter) and an if-else inside the expression sit in different positions.\nAn if-else inside the expression keeps every element but changes the value.",
+        "examples": [
+          {
+            "code": "nums = [1, 2, 3, 4, 5]\nlabels = ['even' if n % 2 == 0 else 'odd' for n in nums]\nprint(labels)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Nested comprehension",
+        "summary": "Use two for clauses to build 2D data.",
+        "details": "With two for clauses, the outer for runs first and the inner for runs inside it.\nOften used to build nested lists (matrices) or to flatten them.",
+        "examples": [
+          {
+            "code": "# Multiplication tables 2 to 4\ntable = [[i, j, i * j] for i in range(2, 5) for j in range(1, 4)]\nfor row in table:\n    print(row)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Dict comprehension",
+        "summary": "Build a dictionary with {key: value for ...}.",
+        "details": "Same syntax as a list comprehension, but separate key and value with a colon (:).\nOften combined with zip to build a dictionary from two parallel lists.",
+        "examples": [
+          {
+            "code": "squares = {n: n * n for n in range(1, 6)}\nprint(squares)\n\nnames = ['John Doe', 'Jane Roe', 'Mary Jane']\nages = [12, 13, 11]\npeople = {n: a for n, a in zip(names, ages)}\nprint(people)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Set comprehension",
+        "summary": "Build a set with {expression for ...} (duplicates removed automatically).",
+        "details": "Use curly braces {} instead of square brackets, and if it is not key:value form, it is a set comprehension.\nDuplicates in the result are automatically reduced to one.",
+        "examples": [
+          {
+            "code": "nums = [1, 2, 2, 3, 3, 3, 4]\nunique_squares = {n * n for n in nums}\nprint(unique_squares)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "loop",
+    "title": "9. Loops",
+    "description": "Iterate with for and while",
+    "icon": "loop",
+    "notice": "",
+    "entries": [
+      {
+        "name": "for + range",
+        "summary": "range(n) repeats n times, from 0 to n-1.",
+        "details": "range(n) generates the integers from 0 to n-1 in order.\nFor a fixed number of repetitions, for + range is the most natural choice.",
+        "examples": [
+          {
+            "code": "for i in range(5):\n    print(i)\n\nprint('---')\nfor i in range(3):\n    print('hello')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "range start / stop / step",
+        "summary": "Use range(start, stop, step) to control range and step.",
+        "details": "range(a, b)    : from a through b-1\nrange(a, b, s) : from a through b-1 in steps of s\nA negative step iterates in reverse order.",
+        "examples": [
+          {
+            "code": "for i in range(1, 6):\n    print(i)\n\nprint('---')\nfor i in range(0, 10, 2):\n    print(i)\n\nprint('---')\nfor i in range(10, 0, -1):\n    print(i)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Iterating lists / strings",
+        "summary": "Pass a collection straight to for to take elements one by one.",
+        "details": "Lists, tuples, strings, sets, and dictionaries (keys) can all be passed to for directly.\nWhen you do not need the index, this is more concise and faster.",
+        "examples": [
+          {
+            "code": "fruits = ['apple', 'banana', 'grape']\nfor f in fruits:\n    print(f)\n\nprint('---')\nfor ch in 'Python':\n    print(ch)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "while basics",
+        "summary": "Repeat as long as the condition is true.",
+        "details": "Use while when the number of iterations is not known in advance.\nIf you do not change the condition inside the loop, you fall into an infinite loop, so be careful.",
+        "examples": [
+          {
+            "code": "n = 1\ntotal = 0\nwhile n <= 10:\n    total += n\n    n += 1\nprint(total)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "break",
+        "summary": "When break is reached, the loop ends immediately.",
+        "details": "Use break when no more iterations are needed once a condition is met.\nOnly the innermost loop is exited.",
+        "examples": [
+          {
+            "code": "for i in range(1, 100):\n    if i * i > 50:\n        print('First value whose square exceeds 50:', i)\n        break",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "continue",
+        "summary": "continue skips this iteration only and moves on.",
+        "details": "Unlike break, which ends the loop, continue skips just one iteration.\nUse it to exclude certain values from processing.",
+        "examples": [
+          {
+            "code": "for i in range(1, 11):\n    if i % 2 == 0:\n        continue\n    print(i)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "enumerate",
+        "summary": "Iterate while taking both index and value.",
+        "details": "enumerate(list) yields (index, value) pairs in order.\nYou no longer need to maintain i yourself in loops that need an index.",
+        "examples": [
+          {
+            "code": "fruits = ['apple', 'banana', 'grape']\nfor i, f in enumerate(fruits):\n    print(i, f)\n\n# Start numbering from 1\nfor i, f in enumerate(fruits, start=1):\n    print(i, f)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "zip",
+        "summary": "Iterate several lists in parallel by pairing them up.",
+        "details": "zip(a, b) pairs elements at the same index into (a[i], b[i]) tuples.\nWhen lengths differ, it stops at the shorter one.",
+        "examples": [
+          {
+            "code": "names = ['John Doe', 'Jane Roe', 'Mary Jane']\nscores = [88, 92, 76]\nfor n, s in zip(names, scores):\n    print(f'{n}: {s} points')",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "function",
+    "title": "10. Functions",
+    "description": "Defining functions, returning, and passing parameters",
+    "icon": "functions",
+    "notice": "",
+    "entries": [
+      {
+        "name": "Defining a function (def)",
+        "summary": "Define a function with the form def name(parameters):.",
+        "details": "A function is a named bundle of code.\nWhen the same processing is needed many times, wrapping it in a function lets you reuse it with a single call.\nAfter def, write the function name, parameters in parentheses, a colon (:) at the end, and indent the next line.",
+        "examples": [
+          {
+            "code": "def greet():\n    print('Hello!')\n\n# Calling the function\ngreet()\ngreet()",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Parameters and arguments",
+        "summary": "Variable names in the parentheses receive values to process.",
+        "details": "Parameter: a variable name written inside the parentheses of a function definition\nArgument: the actual value passed when the function is called\nMultiple parameters are separated by commas; values are passed in the same order at call time (positional arguments).",
+        "examples": [
+          {
+            "code": "def add(a, b):\n    print(f'{a} + {b} = {a + b}')\n\nadd(3, 5)\nadd(10, 20)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Return value (return)",
+        "summary": "Return a result with return.",
+        "details": "The value after return is sent back as the function's result.\nWhen return is reached, the function ends immediately (any lines below are skipped).\nIf you do not write return, or write return with no value, None is returned.",
+        "examples": [
+          {
+            "code": "def square(x):\n    return x * x\n\nresult = square(5)\nprint(result)\nprint(square(7) + square(3))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Returning multiple values",
+        "summary": "Listing multiple values after return packs them into a tuple.",
+        "details": "On the receiving side you can take them with several variables at once (unpacking).\nReceive into a single variable and you get one tuple.",
+        "examples": [
+          {
+            "code": "def min_max(nums):\n    return min(nums), max(nums)\n\nlo, hi = min_max([3, 1, 4, 1, 5, 9, 2, 6])\nprint(lo, hi)\n\nresult = min_max([10, 20, 30])\nprint(result)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Default parameters",
+        "summary": "Give a parameter a default value so it can be omitted at call time.",
+        "details": "With def f(x, y=10), you can call without passing y.\nParameters with defaults must come after parameters without defaults.",
+        "examples": [
+          {
+            "code": "def greet(name, message='Hello'):\n    print(f'{name}, {message}!')\n\ngreet('John Doe')\ngreet('Jane Roe', 'Nice to meet you')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Keyword arguments",
+        "summary": "At call time you can pass values by name with parameter=value.",
+        "details": "With keyword arguments you do not need to remember the order of parameters, and the code reads more clearly.\nWhen mixing positional and keyword arguments, write the positional ones first.",
+        "examples": [
+          {
+            "code": "def make_user(name, age, city):\n    print(f'{name} ({age} years, {city})')\n\nmake_user(name='John Doe', age=12, city='Seoul')\nmake_user('Jane Roe', city='Busan', age=13)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Variable positional arguments (*args)",
+        "summary": "A parameter prefixed with * collects an arbitrary number of positional arguments into a tuple.",
+        "details": "Use *args when you cannot tell in advance how many arguments will be passed.\nThe name args is just a convention; another name works, but args is conventional.",
+        "examples": [
+          {
+            "code": "def total(*nums):\n    print('Received:', nums)\n    return sum(nums)\n\nprint(total(1, 2, 3))\nprint(total(10, 20, 30, 40, 50))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Variable keyword arguments (**kwargs)",
+        "summary": "A parameter prefixed with ** collects an arbitrary number of keyword arguments into a dict.",
+        "details": "Use **kwargs when you want to accept any number of key=value arguments freely.\nInside the function, treat it like a regular dictionary.\nYou can use *args and **kwargs together (order: regular, *args, **kwargs).",
+        "examples": [
+          {
+            "code": "def show_info(**info):\n    for key, value in info.items():\n        print(f'{key}: {value}')\n\nshow_info(name='John Doe', age=12, city='Seoul')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "lambda (one-line anonymous function)",
+        "summary": "Create a short function in one line with the form lambda parameters: expression.",
+        "details": "Use it to make a small unnamed function whose body is a single expression.\nOften used where a function is passed as an argument, like sorted, map, filter.",
+        "examples": [
+          {
+            "code": "# Same effect as a regular def\ndouble = lambda x: x * 2\nprint(double(5))\n\n# As the sort key for sorted\nwords = ['banana', 'apple', 'kiwi']\nprint(sorted(words, key=lambda w: len(w)))\n\n# With map\nnums = [1, 2, 3, 4, 5]\nsquares = list(map(lambda n: n * n, nums))\nprint(squares)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Variable scope (local / global)",
+        "summary": "A variable created inside a function is not visible outside it.",
+        "details": "A variable created inside a function is a local variable and disappears when the function ends.\nA variable created outside a function is a global variable and can be read inside the function.\nTo change a global variable inside a function, declare it with the global keyword.",
+        "examples": [
+          {
+            "code": "count = 0  # Global variable\n\ndef show_local():\n    msg = 'Hello'  # Local variable\n    print(msg)\n    print(count)  # Global variable can be read\n\ndef increase():\n    global count\n    count += 1\n\nshow_local()\nincrease()\nincrease()\nprint('count =', count)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "examples",
+    "title": "11. Examples",
+    "description": "Five practice examples using what you have learned so far",
+    "icon": "lightbulb",
+    "notice": "",
+    "entries": [
+      {
+        "name": "Even/odd checker",
+        "summary": "Use a variable and a conditional to check whether a number is even or odd.",
+        "details": "The remainder operator % returns the remainder of dividing two numbers.\nIf an integer divided by 2 has a remainder of 0, it is even; otherwise it is odd.\n\nThis is the most basic pattern combining if / else with the comparison operator ==.\nTry changing the value of n and see how the result changes.",
+        "examples": [
+          {
+            "code": "# Even/odd checker\nn = 7\n\nif n % 2 == 0:\n    print(f'{n} is even.')\nelse:\n    print(f'{n} is odd.')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Print a multiplication table",
+        "summary": "Use for and range to print a chosen multiplication table at once.",
+        "details": "Store the table you want in the dan variable, and use range(1, 10) to repeat 9 times from 1 to 9.\nWhile the loop variable i changes through 1, 2, 3 ... 9, compute and print dan * i.\n\nInside f-string braces {}, you can write not only variables but also expressions like dan * i.\nTry changing dan to other numbers between 2 and 9 to print other tables.",
+        "examples": [
+          {
+            "code": "# Print a multiplication table\ndan = 7\n\nfor i in range(1, 10):\n    print(f'{dan} x {i} = {dan * i}')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "List average",
+        "summary": "Compute an average using a list and the built-in functions sum and len.",
+        "details": "sum(list) returns the total of all elements; len(list) returns the number of elements.\nThe average is sum / count, so it can be calculated as sum(scores) / len(scores).\n\nWrapping the same operation in a function with def lets you reuse it for any list of numbers.\nFunction parameter names are typically generic, like nums.",
+        "examples": [
+          {
+            "code": "# List average\ndef average(nums):\n    return sum(nums) / len(nums)\n\nscores = [88, 92, 76, 81, 95]\navg = average(scores)\nprint(f'scores: {scores}')\nprint(f'average: {avg}')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Draw a star pyramid",
+        "summary": "Use loops and string multiplication (*) to make a star shape.",
+        "details": "string * integer repeats the string that many times. e.g., \"*\" * 3  →  \"***\"\nUse for and range to print stars in increasing counts of 1, 2, 3 ..., and you get a pyramid.\n\nNote that range(1, height + 1) makes i go from 1 up to height.\nTry changing height to 5, 7, 10, etc., and compare the resulting shapes.",
+        "examples": [
+          {
+            "code": "# Draw a star pyramid\nheight = 5\n\nfor i in range(1, height + 1):\n    print('*' * i)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Palindrome check",
+        "summary": "Reverse with slicing [::-1] and compare to the original to test for a palindrome.",
+        "details": "A palindrome is a string that reads the same backward, like \"level\" or \"racecar\".\nSlicing s[::-1] takes characters from the end one by one, reversing the string.\nIf the reversed result equals the original, it is a palindrome; otherwise it is not.\n\nThe result of an == comparison is True or False, so you can return it directly.\nWrapping it in a function lets you check any string in one line.",
+        "examples": [
+          {
+            "code": "# Palindrome check\ndef is_palindrome(s):\n    return s == s[::-1]\n\nprint(is_palindrome('level'))\nprint(is_palindrome('python'))\nprint(is_palindrome('racecar'))\nprint(is_palindrome('hello'))",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  }
+]
