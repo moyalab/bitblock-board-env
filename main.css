@@ -97,7 +97,12 @@ img {
   max-height: 100%;
 }
 
-button {
+/* Global button reset for the main Choo IDE only.
+   Scoped with body:not(.admin-active) so the React + Tailwind admin route
+   (#/admin/editor, marked by body.admin-active in admin-entry.jsx) keeps
+   Tailwind's preflight defaults — otherwise these 45px square / column-flex
+   rules force every admin button into a tiny vertical box. */
+body:not(.admin-active) button {
   display: flex;
   width: 45px;
   height: 45px;
@@ -111,42 +116,43 @@ button {
   cursor: pointer;
   transition: all 0.1s;
 }
-button.small {
+body:not(.admin-active) button.small {
   width: 28px;
   height: 28px;
   border-radius: 28px;
 }
-button.square {
+body:not(.admin-active) button.square {
   border-radius: 8px;
 }
-button.inverted:hover,
-button.inverted.active {
+body:not(.admin-active) button.inverted:hover,
+body:not(.admin-active) button.inverted.active {
   background: rgba(0, 129, 132, 0.8) !important;
 }
-button.inverted {
+body:not(.admin-active) button.inverted {
   background: rgba(0, 129, 132, 1) !important;
 }
 
-button[disabled], button[disabled]:hover{
+body:not(.admin-active) button[disabled],
+body:not(.admin-active) button[disabled]:hover{
   cursor: default;
   opacity: 0.5;
 }
 
-button:not([disabled]):hover {
+body:not(.admin-active) button:not([disabled]):hover {
   background: rgba(255, 255, 255, 0.18);
   border-radius: 8px;
 }
 
-button.active {
+body:not(.admin-active) button.active {
   background: rgba(255, 255, 255, 0.28);
   border-radius: 8px;
 }
 
-button .icon {
+body:not(.admin-active) button .icon {
   width: 80%;
   height: 80%;
 }
-button.small .icon {
+body:not(.admin-active) button.small .icon {
   width: 75%;
   height: 75%;
 }
@@ -162,13 +168,14 @@ button.small .icon {
   width: auto
 }
 .button.first{
-  width:80px;
+  min-width:80px;
 }
 .button .label {
   text-align: center;
   color: rgba(255, 255, 255, 0.4);
   font-family: "OpenSans", sans-serif;
   font-size: 11px;
+  white-space: nowrap;
 }
 .button .label.active {
   color: rgba(255, 255, 255, .9);
@@ -321,17 +328,28 @@ button.activity-item.is-active:not([disabled]):hover {
 }
 .activity-item.is-active .activity-label { opacity: 1; font-weight: 600; }
 
-/* Topic-list panel (reference content rendered inside the sidebar) */
-.topic-list,
-.topic-detail {
+/* Topic-list panel (reference content rendered inside the sidebar).
+   Layout/colors mirror the python-ide React TopicPreview/TopicListShell
+   so that the same content reads identically across both apps:
+     ink   #181d26   body  #333840   muted #41454d
+     link  #1b61c9   hairline #dddddd  surface-soft #f8fafc
+     code-bg #e6f0fa  toc red-50 #fef2f2 / red-200 #fecaca
+     notice amber-50 #fffbeb / amber-300 #fcd34d / amber-900 #78350f */
+.topic-list {
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow-y: auto;
   background: #fff;
 }
-.topic-list-header,
-.topic-detail-header {
+.topic-detail {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #f8fafc;
+  border-right: 1px solid #dddddd;
+}
+.topic-list-header {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -341,14 +359,16 @@ button.activity-item.is-active:not([disabled]):hover {
   position: sticky;
   top: 0;
   z-index: 1;
+  font-weight: 700;
+  font-size: 16px;
+  color: #111;
 }
-.topic-list-header { font-weight: 700; font-size: 16px; color: #111; }
 .topic-list-body {
   display: flex;
   flex-direction: column;
   padding: 4px 0;
 }
-/* Card-style topic row — lavender icon tile + title/desc + chevron.
+/* Card-style topic row — colored icon tile + title/desc + chevron.
    The global `button` rule earlier in this file forces flex-direction
    to column and justify-content to center; we override both back to a
    horizontal row so the icon/text/arrow lay out left-to-right. */
@@ -360,8 +380,8 @@ button.activity-item.is-active:not([disabled]):hover {
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  gap: 16px;
-  padding: 14px 18px;
+  gap: 12px;
+  padding: 12px 16px;
   text-align: left;
   cursor: pointer;
   width: 100%;
@@ -369,113 +389,476 @@ button.activity-item.is-active:not([disabled]):hover {
   box-sizing: border-box;
   font: inherit;
   color: inherit;
-  border-bottom: 1px solid #f1f3f5;
+  border-bottom: 1px solid #dddddd;
   transition: background 0.12s ease;
 }
 .topic-card:last-child { border-bottom: 0; }
-.topic-card:hover { background: #f4f7ff; }
+.topic-list .topic-card:hover { background: rgba(224, 226, 230, 0.4); border-radius: 0; }
 .topic-card-icon {
   flex: 0 0 56px;
   width: 56px;
   height: 56px;
-  border-radius: 10px;
-  background: #e8e0fe;
-  color: #1f1b2d;
+  border-radius: 6px;
+  background: #bfdbfe;
+  color: #181d26;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .topic-card-icon .material-symbols-outlined {
-  font-size: 30px;
+  font-size: 32px;
   font-variation-settings: 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 .topic-card-text {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   min-width: 0;
 }
 .topic-card-title {
-  font-weight: 700;
-  font-size: 15px;
+  font-weight: 600;
+  font-size: 14px;
   color: #181d26;
-  line-height: 1.25;
-  word-break: keep-all;
-  overflow-wrap: anywhere;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .topic-card-desc {
-  font-size: 13px;
-  color: #5b6470;
+  font-size: 12px;
+  color: #41454d;
   line-height: 1.4;
-  word-break: keep-all;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .topic-card-arrow {
   flex: 0 0 auto;
-  color: #1967d2;
+  color: #1b61c9;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.12s ease;
 }
-.topic-card-arrow .material-symbols-outlined { font-size: 24px; }
-.topic-back {
+.topic-list .topic-card:hover .topic-card-arrow { transform: translateX(2px); }
+.topic-card-arrow .material-symbols-outlined { font-size: 20px; }
+
+/* Detail view — back link bar above the icon/title row, then a
+   scrollable body containing the TOC, optional notice, and entries. */
+.topic-detail-backbar {
+  flex: 0 0 auto;
+  padding: 12px 16px 4px;
+  background: #f8fafc;
+}
+.topic-detail-back-link {
   appearance: none;
   border: 0;
   background: transparent;
-  width: 28px;
-  height: 28px;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
   padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: #1b61c9;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  height: auto;
+  width: auto;
+}
+.topic-detail-backbar .topic-detail-back-link:hover {
+  text-decoration: underline;
+  background: transparent;
+  border-radius: 0;
+}
+.topic-detail-back-link .material-symbols-outlined {
+  font-size: 18px;
+  margin-left: -4px;
+}
+.topic-detail-header {
+  flex: 0 0 auto;
   display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 6px 16px 10px;
+  border-bottom: 1px solid #dddddd;
+  background: #f8fafc;
+  position: static;
+}
+.topic-detail-icon {
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  background: #bfdbfe;
+  color: #181d26;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+.topic-detail-icon .material-symbols-outlined {
+  font-size: 28px;
+  font-variation-settings: 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.topic-detail-text {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.topic-detail-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #181d26;
+  line-height: 1.2;
+}
+.topic-detail-desc {
+  margin: 0;
+  font-size: 13px;
+  color: #41454d;
+  line-height: 1.45;
+}
+.topic-detail-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+/* TOC (목차) — red-tinted box with a flat list of entry names. */
+.topic-toc-wrapper {
+  padding: 12px 16px;
+}
+.topic-toc {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  border-radius: 6px;
+  padding: 12px;
+}
+.topic-toc-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #181d26;
+  margin-bottom: 8px;
+}
+.topic-toc-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.topic-toc-item {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  text-align: left;
   cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  color: #333840;
+  padding: 2px 6px;
+  border-radius: 4px;
+  width: auto;
+  height: auto;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.topic-toc .topic-toc-item:hover {
+  background: #fee2e2;
+  color: #1b61c9;
   border-radius: 4px;
 }
-.topic-back:hover { background: #eef2ff; }
-.topic-detail-title { flex: 1; margin: 0; font-size: 16px; font-weight: 700; color: #111; }
-.topic-detail-desc { padding: 8px 18px 0; color: #41454d; font-size: 13px; margin: 0; }
+.topic-toc-divider {
+  height: 1px;
+  margin: 4px 0;
+  background: #fecaca;
+}
+
+/* Notice / external link rows under the TOC. */
 .topic-notice {
-  margin: 12px 18px 0;
-  padding: 10px 12px;
-  background: #fff8e1;
-  border-left: 3px solid #f5b400;
+  margin: 12px 16px 4px;
+  padding: 8px 12px;
+  border: 1px solid #fcd34d;
+  background: #fffbeb;
+  border-radius: 6px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.topic-notice-icon {
+  font-size: 18px;
+  color: #d97706;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.topic-notice-text {
+  margin: 0;
   font-size: 13px;
-  color: #5a4500;
+  color: #78350f;
+  line-height: 1.55;
   white-space: pre-wrap;
 }
-.topic-entries { padding: 8px 18px 24px; display: flex; flex-direction: column; gap: 18px; }
-.entry { border-top: 1px solid #eee; padding-top: 12px; }
-.entry-name { margin: 0 0 4px; font-size: 14px; color: #181d26; font-weight: 700; font-family: inherit; }
-.entry-summary { margin: 0 0 8px; color: #41454d; font-size: 13px; line-height: 1.45; }
-.entry-details {
-  margin: 0 0 10px;
-  white-space: pre-wrap;
+.topic-external {
+  padding: 12px 16px;
+  border-bottom: 1px solid #dddddd;
+}
+.topic-external-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #1b61c9;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: opacity 0.12s ease;
+}
+.topic-external-link:hover { opacity: 0.9; }
+.topic-external-link .material-symbols-outlined { font-size: 18px; }
+
+/* Per-entry block — title row + summary, optional collapsible
+   details (soft-gray bg) and a list of example code blocks. */
+.entry {
+  padding: 12px 16px;
+  border-bottom: 1px solid #dddddd;
+  background: #ffffff;
+}
+.entry-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+.entry-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #181d26;
   font-family: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.entry-more {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  flex: 0 0 auto;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-size: 12px;
+  color: #1b61c9;
+  cursor: pointer;
+  width: auto;
+  height: auto;
+}
+.entry .entry-more:hover {
+  text-decoration: underline;
+  background: transparent;
+  border-radius: 0;
+}
+.entry-more .material-symbols-outlined { font-size: 16px; }
+
+.entry-summary {
+  margin: 0 0 8px;
   font-size: 13px;
   color: #333840;
   line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.entry-extension {
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  border: 1px solid #86efac;
+  background: #f0fdf4;
+  border-radius: 6px;
+  color: #14532d;
+  font-size: 12px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.entry-notice {
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.entry-notice-warning {
+  border: 1px solid #fcd34d;
+  background: #fffbeb;
+  color: #78350f;
+}
+.entry-notice-info {
+  border: 1px solid #86efac;
+  background: #f0fdf4;
+  color: #14532d;
+}
+.entry-notice-error {
+  border: 1px solid #fca5a5;
+  background: #fef2f2;
+  color: #7f1d1d;
+}
+.entry-notice-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.entry-notice-warning .entry-notice-icon { color: #d97706; }
+.entry-notice-info .entry-notice-icon { color: #15803d; }
+.entry-notice-error .entry-notice-icon { color: #dc2626; }
+.entry-notice-text {
+  font-size: 12px;
+  line-height: 1.55;
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: pre-wrap;
+}
+
+.entry-details-box {
+  margin-bottom: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  background: #f8fafc;
+  font-size: 12px;
+  color: #41454d;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  font-family: inherit;
+}
+
+.entry-table-wrap {
+  margin-bottom: 8px;
+  overflow-x: auto;
+}
+.entry-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.entry-table thead tr { background: #f8fafc; }
+.entry-table th {
+  text-align: left;
+  font-weight: 600;
+  color: #181d26;
+  padding: 4px 8px;
+  border: 1px solid #dddddd;
+}
+.entry-table td {
+  padding: 4px 8px;
+  border: 1px solid #dddddd;
+  color: #333840;
+  vertical-align: top;
+}
+.entry-table-first {
+  font-family: 'JetBrains Mono', 'Roboto Mono', Menlo, Consolas, monospace;
+  color: #181d26;
+  white-space: nowrap;
+}
+
+.entry-example { margin-bottom: 8px; }
+.entry-example:last-child { margin-bottom: 0; }
+.entry-example-desc {
+  margin: 0 0 4px;
+  font-size: 12px;
+  color: #333840;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+.entry-code {
+  position: relative;
+  padding: 8px 8px 8px 28px;
+  border: 1px solid rgba(27, 97, 201, 0.15);
+  border-radius: 6px;
+  background: #e6f0fa;
+  overflow-x: auto;
+  cursor: grab;
+  font-family: 'JetBrains Mono', 'Roboto Mono', Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+.entry-code:active { cursor: grabbing; }
+.entry-code:hover { filter: brightness(0.96); }
+.entry-code-grip {
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: rgba(65, 69, 77, 0.7);
+  pointer-events: none;
+  user-select: none;
+}
+.entry-code-pre {
+  margin: 0;
+  padding: 0;
   background: transparent;
+  color: #181d26;
+  white-space: pre;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.55;
+}
+.entry-code-pre code {
+  font-family: inherit;
+  font-size: inherit;
+  background: transparent;
+  color: inherit;
   padding: 0;
 }
-.entry-example { margin: 8px 0; }
-.entry-example-desc { margin: 0 0 4px; font-size: 12px; color: #5b6470; }
-.entry-example-code {
-  margin: 0;
-  padding: 10px 12px;
-  background: #0d1b2a;
-  color: #d6e3ff;
-  font-family: 'JetBrains Mono', 'Roboto Mono', Menlo, Consolas, monospace;
-  font-size: 12.5px;
-  line-height: 1.45;
-  border-radius: 4px;
-  overflow-x: auto;
-  white-space: pre;
-}
+
 .topic-loading,
 .topic-empty,
-.topic-error { padding: 24px; color: #5b6470; font-size: 13px; }
+.topic-error { padding: 24px; color: #41454d; font-size: 13px; }
 .topic-error { color: #aa2d00; }
+
+/* Snippet drop indicator: shown over the editor while dragging a code
+   block from the topic-detail panel. Top bar marks the exact insertion
+   line; the ghost <pre> beneath previews what will be inserted. */
+.snippet-drop-zone {
+  position: fixed;
+  pointer-events: none;
+  background: rgba(27, 97, 201, 0.06);
+  overflow: hidden;
+}
+.snippet-drop-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #1b61c9;
+  box-shadow: 0 0 0 1px rgba(27, 97, 201, 0.25);
+}
+.snippet-drop-ghost {
+  margin: 0;
+  padding: 4px 0 0 64px;
+  font-family: 'JetBrains Mono', 'Roboto Mono', Menlo, Consolas, monospace;
+  color: rgba(27, 97, 201, 0.7);
+  white-space: pre;
+}
 
 /* Tutorial-editor (admin) — full-screen 3-column layout, replaces
    the main app shell when /#/admin is the active route. */
@@ -781,6 +1164,37 @@ body.is-resizing-sidebar {
   cursor: pointer;
 }
 button.settings-apply:hover { background: #3367d6; border-radius: 4px; }
+
+.settings-shortcut-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.settings-shortcut-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #333;
+}
+.settings-shortcut-key {
+  display: inline-block;
+  min-width: 56px;
+  padding: 2px 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  text-align: center;
+  white-space: nowrap;
+}
+.settings-shortcut-desc {
+  color: #555;
+}
 /* When collapsed the sidebar itself is 0px wide. Pin the toggle inside the
    viewport (left edge) so it remains clickable to re-expand. */
 .app-sidebar.collapsed .sidebar-toggle {

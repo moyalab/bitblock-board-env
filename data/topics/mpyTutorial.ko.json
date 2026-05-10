@@ -1,0 +1,1480 @@
+[
+  {
+    "id": "getting_started",
+    "title": "1. MicroPython 시작하기",
+    "description": "MicroPython이 무엇인지 알고, 보드를 연결해 첫 명령을 실행한다.",
+    "icon": "rocket_launch",
+    "notice": "이 튜토리얼의 GPIO 번호는 BitBlock 보드(ESP32-S3) 기준이다. 다른 보드라면 핀 번호를 보드 핀맵에 맞게 바꿔야 한다.\n외부에서 연결할 수 있는 BitBlock 핀: P0(GPIO 10), P1(GPIO 4), P2(GPIO 8), P3(GPIO 2), P4(GPIO 47), P7(GPIO 39), P11(GPIO 48), P12(GPIO 18), SERVO(GPIO 16), DCMOTOR(GPIO 46), SDA(GPIO 14), SCL(GPIO 21). 그 밖의 GPIO 는 보드 내부 회로(내장 LED 매트릭스, 버튼 A/B, 부저, 광센서 등)가 사용하므로 외부에서 조작하지 않는다.",
+    "entries": [
+      {
+        "name": "MicroPython이란",
+        "summary": "마이크로컨트롤러(MCU) 위에서 직접 도는 작은 Python 처리기다.",
+        "details": "PC에서 쓰는 표준 Python 3와 문법이 거의 같지만, 보드의 작은 RAM/Flash에 들어가도록 다듬어졌다.\n핵심 차이는 두 가지다.\n  - GPIO/PWM/ADC 같은 하드웨어를 다루는 machine 모듈이 기본 제공된다.\n  - 일부 표준 라이브러리는 이름 앞에 'u'가 붙은 축소판(예: ujson, urequests)이거나 일부 기능만 들어있다.\n에디터에 코드를 적고 보드로 보내거나, 우측 REPL 창에 한 줄씩 쳐서 즉시 실행할 수 있다.",
+        "examples": []
+      },
+      {
+        "name": "보드 연결과 REPL 열기",
+        "summary": "USB 케이블로 보드를 PC에 꽂고, 상단 도구막대에서 포트를 선택한다.",
+        "details": "1) 보드를 USB로 PC에 연결한다.\n2) 상단 도구막대의 포트 메뉴에서 인식된 시리얼 포트를 고른다.\n3) 우측 REPL 창에 '>>>' 프롬프트가 뜨면 준비 완료다.\n프롬프트가 안 나오면 보드를 한 번 리셋하거나 케이블을 다시 꽂는다.",
+        "examples": []
+      },
+      {
+        "name": "첫 명령: print",
+        "summary": "REPL에 한 줄을 치고 Enter를 누르면 그 자리에서 실행된다.",
+        "details": "보드의 Python이 즉시 줄을 읽고 결과를 돌려준다. 코드를 파일로 저장하지 않아도 동작을 빠르게 확인할 수 있다.",
+        "examples": [
+          {
+            "code": "print('hello, micropython')\nprint(1 + 2)\nprint('보드 위에서 실행 중')",
+            "description": "REPL에 한 줄씩 쳐서 출력 확인."
+          }
+        ]
+      },
+      {
+        "name": "내장 도움말",
+        "summary": "help() 와 dir() 로 무엇이 들어 있는지 직접 확인할 수 있다.",
+        "details": "help() 는 인자 없이 실행하면 짧은 안내가, 객체를 넘기면 그 객체의 설명이 나온다.\ndir(객체) 는 그 객체가 가진 이름들을 리스트로 돌려준다 — 어떤 메서드가 있는지 빠르게 살필 때 유용하다.",
+        "examples": [
+          {
+            "code": "help()              # 일반 도움말\nimport machine\nhelp(machine)       # machine 모듈 설명\ndir(machine)        # 안에 있는 이름들",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "에디터에서 파일로 실행",
+        "summary": "에디터 창에 코드를 적고 ▶ 버튼(또는 Ctrl+Enter)으로 보드에 보낸다.",
+        "details": "REPL은 한 줄 실험에 좋고, 여러 줄 프로그램은 에디터에 적어 파일로 저장하는 게 편하다.\n실행 단축키는 Ctrl+Enter (브라우저 환경 기본).\n저장은 좌측 파일 탐색기에서 보드의 원하는 위치에 한다.",
+        "examples": [
+          {
+            "code": "# main.py 등에 저장해 실행\nfor i in range(3):\n    print('count', i)\nprint('done')",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "repl_basics",
+    "title": "2. REPL 활용법",
+    "description": "REPL 프롬프트가 무엇을 말해주는지 알고, 중단/리셋 단축키를 익힌다.",
+    "icon": "terminal",
+    "entries": [
+      {
+        "name": ">>> 와 ... 의 의미",
+        "summary": ">>> 는 새 줄 입력을 기다린다는 뜻, ... 는 이어 적으라는 뜻이다.",
+        "details": "for·if·def 처럼 콜론(:)으로 끝나는 줄 다음에는 들여쓴 본문이 와야 한다.\nREPL은 본문이 끝날 때까지 ... 프롬프트로 입력을 받다가, 빈 줄을 만나면 한 묶음으로 실행한다.",
+        "examples": [
+          {
+            "code": ">>> for i in range(3):\n...     print(i)\n...\n0\n1\n2",
+            "description": "들여쓰기 한 칸 이상이 있어야 한다. 빈 줄로 블록을 끝낸다."
+          }
+        ]
+      },
+      {
+        "name": "변수가 살아 있다",
+        "summary": "REPL에서 만든 변수는 다음 줄에서도 그대로 쓸 수 있다.",
+        "details": "REPL은 한 번 실행되는 게 아니라 보드 안에서 계속 살아 있다.\n그래서 a = 10 으로 만들어 두면 다음 줄에서 a + 5 라고만 쳐도 결과가 나온다.\n다만 보드 전원을 끄거나 소프트 리셋하면 모든 변수가 사라진다.",
+        "examples": [
+          {
+            "code": ">>> a = 10\n>>> b = 32\n>>> a + b\n42",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Ctrl+C 로 중단",
+        "summary": "오래 도는 코드나 무한 루프는 Ctrl+C 로 멈출 수 있다.",
+        "details": "while True 같이 끝나지 않는 루프를 실행했을 때, REPL 창에 포커스를 두고 Ctrl+C 를 누르면 KeyboardInterrupt 예외가 던져지면서 멈춘다.\n파일 실행 중에도 동일하게 동작한다.",
+        "examples": [
+          {
+            "code": "import time\nwhile True:\n    print('loop')\n    time.sleep(1)\n# Ctrl+C 로 중단",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "Ctrl+D — 소프트 리셋",
+        "summary": "Ctrl+D 는 보드를 다시 시작하는 것과 비슷한 효과다.",
+        "details": "변수 상태를 모두 지우고 main.py 같은 부팅 스크립트를 다시 실행한다.\n전원을 빼지 않고도 깨끗한 상태에서 다시 테스트할 때 쓴다.",
+        "examples": []
+      },
+      {
+        "name": "_ (마지막 결과)",
+        "summary": "직전 실행 결과는 변수 _ 로 다시 가져올 수 있다.",
+        "details": "값만 평가하고 변수에 담지 않은 줄의 결과가 자동으로 _ 에 저장된다.\nprint() 처럼 None 을 돌려주는 호출 뒤에는 _ 도 None 이 된다.",
+        "examples": [
+          {
+            "code": ">>> 1 + 2\n3\n>>> _ * 10\n30",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "variables_types",
+    "title": "3. 변수와 자료형",
+    "description": "값에 이름을 붙이는 변수와 자주 쓰는 기본 자료형을 익힌다.",
+    "icon": "label",
+    "entries": [
+      {
+        "name": "변수 만들기",
+        "summary": "이름 = 값 한 줄로 변수를 만든다. 미리 선언할 필요는 없다.",
+        "details": "= 의 왼쪽이 이름, 오른쪽이 값이다. 같은 이름에 다른 값을 다시 대입하면 그냥 덮어써진다.\n이름 규칙: 영문/숫자/밑줄, 첫 글자는 숫자 불가, 예약어(if, for 등) 사용 불가.",
+        "examples": [
+          {
+            "code": "name = 'BitBlock'\ncount = 3\nratio = 0.75\nprint(name, count, ratio)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "정수와 실수",
+        "summary": "int 는 정수, float 는 소수점이 있는 수다.",
+        "details": "정수 사이의 / 연산은 결과가 항상 float 다 (10 / 4 = 2.5).\n나누어 떨어지는 정수 결과를 원하면 // 를 쓴다 (10 // 4 = 2).\nMicroPython 의 정수는 보드 메모리가 허락하는 한 길이 제한이 거의 없다.",
+        "examples": [
+          {
+            "code": "a = 7\nb = 2.5\nprint(a + b)     # 9.5\nprint(a / 2)     # 3.5\nprint(a // 2)    # 3",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "문자열 (str)",
+        "summary": "작은따옴표 또는 큰따옴표로 묶으면 문자열이다.",
+        "details": "두 따옴표는 똑같이 동작한다. 문자열 안에 따옴표를 쓰고 싶으면 다른 종류로 묶거나 \\\" 처럼 백슬래시로 이스케이프한다.\n여러 줄 문자열은 ''' ... ''' 로 묶는다.",
+        "examples": [
+          {
+            "code": "msg = 'hello'\nname = \"world\"\nbanner = '''line 1\nline 2\nline 3'''\nprint(msg, name)\nprint(banner)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "bool 과 None",
+        "summary": "bool 은 True/False 두 값, None 은 '값이 없음'을 의미한다.",
+        "details": "bool 은 비교 결과(예: 3 > 1)나 if 조건의 자연스러운 결과 자료형이다.\nNone 은 함수가 명시적으로 값을 돌려주지 않을 때나 '아직 안 정해짐'을 표현할 때 쓴다.\n비교는 if x is None: 처럼 is 로 한다 (== None 보다 권장).",
+        "examples": [
+          {
+            "code": "ok = True\nfound = False\nresult = None\nprint(ok and found)\nprint(result is None)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "type() 으로 자료형 확인",
+        "summary": "type(값) 은 그 값의 자료형 객체를 돌려준다.",
+        "details": "디버깅 중에 '이 변수가 int 인 줄 알았는데 str 이었네' 같은 실수를 빨리 찾을 때 유용하다.\nint(s) / float(s) / str(n) 으로 자료형끼리 변환할 수 있다.",
+        "examples": [
+          {
+            "code": "x = 10\ny = '10'\nprint(type(x))      # <class 'int'>\nprint(type(y))      # <class 'str'>\nprint(int(y) + x)   # 20",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "operators",
+    "title": "4. 연산자",
+    "description": "수치 계산·비교·논리 조합에 쓰는 기본 연산자들을 한자리에 정리한다.",
+    "icon": "calculate",
+    "entries": [
+      {
+        "name": "산술 연산자",
+        "summary": "+, -, *, /, //, %, ** 일곱 개가 핵심이다.",
+        "details": "/ 는 실수 나눗셈, // 는 정수 몫, % 는 나머지, ** 는 거듭제곱이다.\n문자열에 + 를 쓰면 이어붙이기, 정수 곱은 반복이다 ('ab' * 3 = 'ababab').",
+        "examples": [
+          {
+            "code": "print(7 + 3, 7 - 3, 7 * 3)\nprint(7 / 3, 7 // 3, 7 % 3)\nprint(2 ** 10)             # 1024\nprint('=' * 20)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "비교 연산자",
+        "summary": "==, !=, <, <=, >, >= 로 두 값을 비교하면 결과는 True/False 다.",
+        "details": "== 와 = 는 다르다 — = 는 대입, == 는 같은지 확인이다.\nMicroPython 도 a < b < c 처럼 묶어서 쓸 수 있다 (수학식과 같은 의미).",
+        "examples": [
+          {
+            "code": "x = 25\nprint(x == 25)\nprint(0 < x < 100)\nprint('abc' != 'ABC')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "논리 연산자",
+        "summary": "and, or, not 으로 조건을 묶는다.",
+        "details": "and 는 둘 다 True 여야 True, or 는 하나라도 True 면 True, not 은 뒤집기다.\nand/or 는 단축평가(short-circuit)를 한다 — 결과가 결정되면 뒤를 평가하지 않는다.",
+        "examples": [
+          {
+            "code": "temp = 28\nlight = 600\nprint(temp > 25 and light < 700)\nprint(not (temp < 0))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "우선순위와 괄호",
+        "summary": "** > 단항 부호 > * / // % > + - > 비교 > not > and > or 순이다.",
+        "details": "기억하기 어렵다면 의도를 그대로 보여주는 괄호를 쓰는 편이 안전하다.\n특히 비교와 산술이 섞일 때 (a + b) > 10 처럼 괄호로 의도를 분명히 한다.",
+        "examples": [
+          {
+            "code": "print(2 + 3 * 4)        # 14\nprint((2 + 3) * 4)      # 20\nprint(not 0 == 1 or 2)  # True (단축평가 결과)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "복합 대입",
+        "summary": "x += 1 은 x = x + 1 의 짧은 표기다.",
+        "details": "+=, -=, *=, /=, //=, %=, **= 모두 같은 패턴이다.\n반복 변수의 값을 바꾸는 자리에 자주 쓰인다.",
+        "examples": [
+          {
+            "code": "n = 0\nfor _ in range(5):\n    n += 1\nprint(n)        # 5",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "strings",
+    "title": "5. 문자열 다루기",
+    "description": "글자를 자르고, 합치고, 형식에 맞춰 출력하는 기본기를 다진다.",
+    "icon": "text_fields",
+    "entries": [
+      {
+        "name": "인덱싱과 슬라이싱",
+        "summary": "s[i] 로 한 글자, s[a:b] 로 부분 문자열을 얻는다.",
+        "details": "인덱스는 0부터 시작하고, -1 은 끝에서 첫 번째다.\n슬라이스 [a:b] 는 a 부터 b-1 까지를 포함한다 (b 는 미포함).\n[a:b:step] 으로 건너뛰기, [::-1] 로 역순 문자열을 만들 수 있다.",
+        "examples": [
+          {
+            "code": "s = 'micropython'\nprint(s[0], s[-1])      # m n\nprint(s[0:5])           # micro\nprint(s[::-1])          # nohtyporcim",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "길이와 결합",
+        "summary": "len(s) 는 글자 수, + 는 이어붙이기, * 는 반복이다.",
+        "details": "문자열은 불변이라 + 결과는 항상 새 문자열이다.\n반복문 안에서 += 로 문자열을 계속 늘리면 매번 새 객체가 만들어져 느려진다 — 이런 경우 리스트에 모아 마지막에 ''.join(...) 으로 합친다.",
+        "examples": [
+          {
+            "code": "name = 'BitBlock'\nprint(len(name))         # 8\nprint(name + ' v1')\nprint('-' * 5)           # -----",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "자주 쓰는 메서드",
+        "summary": "upper/lower, strip, replace, split 정도면 대부분 처리된다.",
+        "details": "메서드는 원본을 바꾸지 않고 새 문자열을 돌려준다 (str 은 불변).\nstrip() 은 양 끝의 공백/개행을 떼고, split(sep) 는 구분자로 잘라 리스트를 만든다.",
+        "examples": [
+          {
+            "code": "s = '  Hello, MPY  '\nprint(s.strip())\nprint(s.lower())\nprint(s.replace('MPY', 'MicroPython'))\nprint('a,b,c'.split(','))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "f-string 으로 값 끼워넣기",
+        "summary": "f'{이름}' 처럼 f 접두사를 붙이면 중괄호 안의 식이 평가된다.",
+        "details": "옛 % 포맷이나 .format() 보다 짧고 읽기 좋다.\n포맷 옵션은 콜론 뒤에 적는다: f'{x:>5}' (오른쪽 정렬 폭 5), f'{p:.2f}' (소수점 둘째 자리).",
+        "examples": [
+          {
+            "code": "temp = 23.456\nname = 'BitBlock'\nprint(f'{name} 온도 {temp:.1f}도')\nprint(f'{42:>5}')        # '   42'",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "join 으로 합치기",
+        "summary": "구분자.join(리스트) 로 문자열들을 한 번에 이어붙인다.",
+        "details": "+ 를 반복하는 것보다 빠르고 메모리도 적게 쓴다.\n리스트의 모든 요소가 str 이어야 한다 — 숫자는 미리 str(n) 으로 변환한다.",
+        "examples": [
+          {
+            "code": "parts = ['esp32', 's3', 'devboard']\nprint('-'.join(parts))       # esp32-s3-devboard\n\nnums = [1, 2, 3]\nprint(','.join(str(n) for n in nums))",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "if_else",
+    "title": "6. 조건문 if / elif / else",
+    "description": "조건에 따라 분기하는 가장 기본적인 흐름 제어를 익힌다.",
+    "icon": "alt_route",
+    "entries": [
+      {
+        "name": "if 기본 형태",
+        "summary": "if 조건: 다음 줄을 들여쓰면 그 줄들이 조건이 참일 때만 실행된다.",
+        "details": "조건 자리에는 True/False 를 돌려주는 식이 온다.\n블록을 시작할 때 콜론(:) 을 빠뜨리지 않도록 주의한다.",
+        "examples": [
+          {
+            "code": "x = 7\nif x > 0:\n    print('양수')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "elif / else",
+        "summary": "여러 갈래는 elif 로 잇고 마지막에 else 를 둔다.",
+        "details": "위에서부터 순서대로 검사하다가 처음 참이 되는 가지 하나만 실행한다.\nelif 는 몇 개든 이어 붙일 수 있다.",
+        "examples": [
+          {
+            "code": "score = 76\nif score >= 90:\n    grade = 'A'\nelif score >= 80:\n    grade = 'B'\nelif score >= 70:\n    grade = 'C'\nelse:\n    grade = 'D'\nprint(grade)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "들여쓰기 규칙",
+        "summary": "한 블록 안의 모든 줄은 같은 칸수만큼 들여써야 한다.",
+        "details": "Python 은 중괄호 대신 들여쓰기로 블록을 구분한다.\n관습적으로 공백 4칸을 쓴다. 탭과 공백을 섞지 말 것 — 에디터의 자동 들여쓰기를 그대로 쓰면 안전하다.",
+        "examples": []
+      },
+      {
+        "name": "한 줄 조건 표현식",
+        "summary": "값 = a if 조건 else b 형태로 한 줄에 분기 결과를 담을 수 있다.",
+        "details": "결과를 변수에 대입할 때 쓰면 코드가 짧아진다.\n복잡해지면 오히려 if/else 블록이 더 읽기 좋다.",
+        "examples": [
+          {
+            "code": "x = 12\nlabel = '짝' if x % 2 == 0 else '홀'\nprint(label)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "truthy / falsy 평가",
+        "summary": "0, 빈 문자열, 빈 리스트, None 은 if 조건에서 False 로 평가된다.",
+        "details": "그 외 값은 모두 True 로 평가된다.\nif items: 만으로 '리스트가 비지 않았는가?' 를 검사할 수 있다 — len(items) > 0 보다 자주 쓰는 관용구.",
+        "examples": [
+          {
+            "code": "data = []\nif data:\n    print('값이 있음')\nelse:\n    print('비었음')\n\nname = ''\nif not name:\n    print('이름 미입력')",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "loops",
+    "title": "7. 반복문 for / while",
+    "description": "범위·시퀀스 순회와 조건 기반 반복을 자유롭게 쓸 수 있게 한다.",
+    "icon": "repeat",
+    "entries": [
+      {
+        "name": "for + range",
+        "summary": "range(n) 은 0..n-1 을 만들어 주는 가장 흔한 반복 도구다.",
+        "details": "range(start, stop, step) 형태로 시작/끝/간격을 줄 수 있다.\nstop 은 포함되지 않는다 (range(5) → 0,1,2,3,4).",
+        "examples": [
+          {
+            "code": "for i in range(5):\n    print(i)\n\nfor i in range(10, 0, -2):\n    print(i)            # 10 8 6 4 2",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "리스트 순회",
+        "summary": "리스트나 문자열도 그대로 for 에 쓸 수 있다.",
+        "details": "원소를 하나씩 받아 변수에 담아 준다.\n인덱스가 같이 필요하면 enumerate(seq) 를 쓰면 (i, value) 쌍이 나온다.",
+        "examples": [
+          {
+            "code": "fruits = ['apple', 'banana', 'cherry']\nfor f in fruits:\n    print(f)\n\nfor i, f in enumerate(fruits):\n    print(i, f)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "while 루프",
+        "summary": "while 조건: 은 조건이 True 인 동안 본문을 반복한다.",
+        "details": "for 가 횟수가 정해진 반복이라면, while 은 끝나는 시점이 안에서 결정되는 반복에 어울린다.\n루프 안에서 조건을 변하게 만들지 않으면 무한히 돈다 — 의도한 무한 루프가 아니라면 주의한다.",
+        "examples": [
+          {
+            "code": "n = 1\nwhile n < 100:\n    n *= 2\nprint(n)            # 128",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "break 와 continue",
+        "summary": "break 는 루프 즉시 종료, continue 는 이번 회차만 건너뛴다.",
+        "details": "while True 와 break 의 조합으로 '조건이 만족되면 빠져나오는' 패턴을 자주 쓴다.\ncontinue 는 필터링 같은 흐름에 어울린다.",
+        "examples": [
+          {
+            "code": "for i in range(10):\n    if i == 5:\n        break\n    if i % 2 == 0:\n        continue\n    print(i)        # 1 3",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "for/else",
+        "summary": "for 가 break 없이 끝까지 돌았을 때만 else 블록이 실행된다.",
+        "details": "리스트에서 무엇을 찾는 패턴에 잘 어울린다.\n찾으면 break 로 빠져나오고, 끝까지 못 찾으면 else 가 실행되어 '없음' 처리를 한다.",
+        "examples": [
+          {
+            "code": "nums = [3, 7, 11, 15]\nfor n in nums:\n    if n == 8:\n        print('found')\n        break\nelse:\n    print('not found')",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lists_tuples",
+    "title": "8. 리스트와 튜플",
+    "description": "여러 값을 묶어 다루는 가장 자주 쓰는 두 컨테이너의 기본기를 익힌다.",
+    "icon": "view_list",
+    "entries": [
+      {
+        "name": "리스트 만들기와 추가",
+        "summary": "[] 로 빈 리스트를 만들고 append() 로 끝에 추가한다.",
+        "details": "리스트는 가변이다 — 만든 뒤에 원소를 더하거나 바꿀 수 있다.\n자주 쓰는 메서드: append, insert, pop, remove, extend.",
+        "examples": [
+          {
+            "code": "items = []\nitems.append('led')\nitems.append('button')\nitems.insert(0, 'sensor')\nprint(items)            # ['sensor', 'led', 'button']\n\nitems.pop()             # 'button' 제거 후 반환\nprint(items)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "인덱싱과 슬라이싱",
+        "summary": "문자열과 같은 [i], [a:b] 문법이 그대로 통한다.",
+        "details": "슬라이스 결과는 새 리스트다 — 원본을 바꾸지 않는다.\n원본 자체에서 일부 구간을 한 번에 바꾸려면 a[1:3] = [...] 처럼 슬라이스에 대입한다.",
+        "examples": [
+          {
+            "code": "nums = [10, 20, 30, 40, 50]\nprint(nums[1:4])         # [20, 30, 40]\nprint(nums[::-1])        # 역순 복사\n\nnums[1:3] = [99, 100]\nprint(nums)              # [10, 99, 100, 40, 50]",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "정렬과 뒤집기",
+        "summary": "list.sort() 는 원본을 바꾸고, sorted(list) 는 정렬된 새 리스트를 돌려준다.",
+        "details": "역순 정렬은 sort(reverse=True), 키 함수는 sort(key=함수) 로 준다.\nreverse() 는 단순히 순서를 뒤집는다 — 정렬과는 다르다.",
+        "examples": [
+          {
+            "code": "vals = [3, 1, 4, 1, 5, 9]\nvals.sort()\nprint(vals)               # [1, 1, 3, 4, 5, 9]\n\nnames = ['eve', 'bob', 'al']\nprint(sorted(names, key=len))  # ['al', 'bob', 'eve']",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "튜플과 불변성",
+        "summary": "괄호로 묶인 (a, b, c) 는 리스트와 비슷하지만 바꿀 수 없다.",
+        "details": "값이 변하면 안 되는 묶음(좌표, 핀 번호 쌍 등)에 어울린다.\n함수가 여러 값을 한 번에 돌려줄 때도 자연스럽게 튜플이 쓰인다.\n분해(unpack) 도 손쉽게 할 수 있다: x, y = (10, 20).",
+        "examples": [
+          {
+            "code": "point = (10, 20)\nx, y = point\nprint(x, y)\n\ndef minmax(seq):\n    return min(seq), max(seq)\n\nlo, hi = minmax([3, 7, 1, 9, 5])\nprint(lo, hi)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "리스트 컴프리헨션",
+        "summary": "[식 for x in 시퀀스] 한 줄로 새 리스트를 만든다.",
+        "details": "for 루프 + append 를 짧게 적은 형태다.\n조건은 뒤에 if 로 붙인다: [n*n for n in range(10) if n % 2 == 0].",
+        "examples": [
+          {
+            "code": "squares = [n * n for n in range(6)]\nprint(squares)           # [0, 1, 4, 9, 16, 25]\n\nevens = [n for n in range(20) if n % 2 == 0]\nprint(evens)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dict_set",
+    "title": "9. 딕셔너리와 집합",
+    "description": "키로 값을 빠르게 찾는 딕셔너리와 중복 없는 집합의 기본을 익힌다.",
+    "icon": "data_object",
+    "entries": [
+      {
+        "name": "딕셔너리 만들기",
+        "summary": "{키: 값, ...} 형식으로 만들고 d[키] 로 값을 읽거나 쓴다.",
+        "details": "키는 보통 문자열이나 숫자, 튜플 같은 불변 값이다.\n키가 없는 자리에 d[키] = 값 으로 대입하면 새 항목이 생긴다.",
+        "examples": [
+          {
+            "code": "config = {'ssid': 'home', 'pw': '1234', 'retry': 3}\nprint(config['ssid'])\n\nconfig['retry'] = 5\nconfig['timeout'] = 10\nprint(config)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "키 존재 검사",
+        "summary": "in 으로 키가 있는지 확인하고, get() 으로 기본값과 함께 읽는다.",
+        "details": "없는 키를 d[키] 로 읽으면 KeyError 가 난다.\nd.get(키, 기본값) 은 키가 없을 때 기본값을 돌려주므로 try/except 없이 안전하게 읽을 수 있다.",
+        "examples": [
+          {
+            "code": "config = {'ssid': 'home'}\nprint('ssid' in config)        # True\nprint(config.get('pw', 'NONE'))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "items / keys / values 순회",
+        "summary": "for k, v in d.items(): 로 모든 쌍을 한 번에 돈다.",
+        "details": "키만 필요하면 d.keys() 또는 그냥 for k in d, 값만 필요하면 d.values() 를 쓴다.\nMicroPython 에서 딕셔너리 순서는 입력 순서가 유지된다 (CPython 3.7+ 와 같은 동작).",
+        "examples": [
+          {
+            "code": "scores = {'a': 90, 'b': 75, 'c': 88}\nfor name, score in scores.items():\n    print(name, score)\n\ntotal = sum(scores.values())\nprint('total =', total)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "집합 만들기",
+        "summary": "{a, b, c} 또는 set([...]) 으로 중복 없는 묶음을 만든다.",
+        "details": "리스트에서 중복을 제거할 때 set(리스트) 를 자주 쓴다.\n빈 집합은 {} 가 아니라 set() 으로 만든다 — {} 는 빈 딕셔너리다.",
+        "examples": [
+          {
+            "code": "raw = [1, 2, 2, 3, 3, 3, 4]\nuniq = set(raw)\nprint(uniq)              # {1, 2, 3, 4}\nprint(sorted(uniq))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "집합 연산",
+        "summary": "| 합집합, & 교집합, - 차집합 — 수학 그대로 쓸 수 있다.",
+        "details": "두 모임의 공통 원소나 한쪽에만 있는 원소를 한 줄에 구할 수 있다.\nadd(x), discard(x) 로 한 원소를 추가/제거한다.",
+        "examples": [
+          {
+            "code": "a = {1, 2, 3, 4}\nb = {3, 4, 5, 6}\nprint(a | b)             # 합집합\nprint(a & b)             # 교집합 {3, 4}\nprint(a - b)             # 차집합 {1, 2}",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "functions",
+    "title": "10. 함수 정의",
+    "description": "코드를 이름 붙은 묶음으로 만들어 재사용하는 방법을 배운다.",
+    "icon": "function",
+    "entries": [
+      {
+        "name": "def 기본",
+        "summary": "def 이름(매개변수): 다음에 본문을 들여쓴다.",
+        "details": "함수는 호출되기 전까지는 실행되지 않는다 — 정의는 '나중에 쓸 묶음을 만든다' 의 의미다.\n호출은 이름(인자) 형태다.",
+        "examples": [
+          {
+            "code": "def greet():\n    print('hello')\n\ngreet()             # 호출",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "매개변수와 인수",
+        "summary": "def 줄에 적은 이름이 매개변수, 호출 시 넘기는 값이 인수다.",
+        "details": "매개변수는 콤마로 구분해 여러 개 받을 수 있다.\n호출할 때 이름을 명시하면(키워드 인수) 순서를 바꿔도 된다.",
+        "examples": [
+          {
+            "code": "def add(a, b):\n    return a + b\n\nprint(add(3, 4))\nprint(add(b=10, a=2))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "기본값",
+        "summary": "매개변수에 = 로 기본값을 주면 호출 시 생략할 수 있다.",
+        "details": "기본값이 있는 매개변수는 없는 것보다 뒤에 와야 한다.\n주의: 기본값으로 리스트/딕셔너리 같은 가변 객체를 쓰면 호출 간에 공유돼 의도치 않은 버그가 생긴다 — 보통 None 으로 두고 함수 안에서 새로 만든다.",
+        "examples": [
+          {
+            "code": "def blink(times=3, ms=200):\n    print('blink', times, ms)\n\nblink()\nblink(5)\nblink(ms=100)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "반환값",
+        "summary": "return 으로 결과를 돌려준다. return 이 없으면 None 이 반환된다.",
+        "details": "return 을 만나면 함수는 즉시 끝난다.\n여러 값을 콤마로 돌려주면 호출자는 튜플로 받는다.",
+        "examples": [
+          {
+            "code": "def divmod2(a, b):\n    return a // b, a % b\n\nq, r = divmod2(17, 5)\nprint(q, r)         # 3 2",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "지역 변수와 전역 변수",
+        "summary": "함수 안에서 만든 변수는 그 함수 안에서만 살아 있다.",
+        "details": "함수 밖의 변수는 함수 안에서 읽을 수는 있지만, 새로 대입하면 같은 이름의 지역 변수가 만들어진다.\n바깥 변수에 대입하고 싶다면 함수 첫 줄에 global 이름 선언이 필요하다 — 가능하면 인자/반환값으로 주고받는 편이 깔끔하다.",
+        "examples": [
+          {
+            "code": "count = 0\n\ndef bump():\n    global count\n    count += 1\n\nbump(); bump(); bump()\nprint(count)        # 3",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "modules_time",
+    "title": "11. 모듈과 import — time / random / math",
+    "description": "필요한 기능을 가져다 쓰는 import 문법과 자주 쓰는 표준 모듈을 익힌다.",
+    "icon": "extension",
+    "entries": [
+      {
+        "name": "import 문법",
+        "summary": "import 모듈 → 모듈.기능, from 모듈 import 이름 → 이름 그대로 쓴다.",
+        "details": "as 로 짧은 별명을 줄 수도 있다 (import time as t).\n자주 쓰는 함수만 골라 가져오면 코드가 짧아지지만, 어디서 왔는지 추적하기 어려워질 수 있다 — 적당히 균형.",
+        "examples": [
+          {
+            "code": "import time\ntime.sleep(0.5)\n\nfrom time import sleep_ms\nsleep_ms(100)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "time.sleep / sleep_ms / sleep_us",
+        "summary": "프로그램을 잠시 멈추는 가장 기본적인 도구다.",
+        "details": "time.sleep(초) 는 부동소수점 초 단위, sleep_ms / sleep_us 는 정수 ms / us 단위다.\nMicroPython 에서는 ms / us 함수가 더 정확하고 가벼우니 가능하면 그쪽을 쓴다.",
+        "examples": [
+          {
+            "code": "import time\n\nfor i in range(3):\n    print(i)\n    time.sleep_ms(500)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "ticks_ms / ticks_diff",
+        "summary": "지나간 시간을 잰다 — sleep 없이 '몇 ms 마다' 일을 처리할 때 쓴다.",
+        "details": "time.ticks_ms() 는 보드 부팅 후 흐른 ms 를 돌려주는 정수다.\ntime.ticks_diff(end, start) 로 두 시각 사이를 안전하게 빼야 오버플로 케이스가 처리된다.\n루프 안에서 sleep 대신 ticks_diff 를 쓰면 다른 일도 같이 처리할 수 있다.",
+        "examples": [
+          {
+            "code": "import time\n\nstart = time.ticks_ms()\nwhile time.ticks_diff(time.ticks_ms(), start) < 1000:\n    pass\nprint('1초 경과')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "random",
+        "summary": "임의의 수나 선택을 만들 때 쓰는 작은 모듈이다.",
+        "details": "randint(a, b) 는 a 이상 b 이하의 정수를 돌려준다 (양 끝 포함).\nchoice(seq) 는 시퀀스에서 하나를 무작위로 고른다.",
+        "examples": [
+          {
+            "code": "import random\n\nprint(random.randint(1, 6))      # 주사위\nprint(random.choice(['적', '청', '녹']))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "math",
+        "summary": "사인/코사인/제곱근 등 기본 수학 함수가 들어있다.",
+        "details": "PC Python 의 math 와 같은 이름이지만 일부 함수는 빠지거나 정밀도가 다를 수 있다.\nradians/degrees 변환을 자주 잊는다 — 삼각함수는 라디안 단위다.",
+        "examples": [
+          {
+            "code": "import math\n\nprint(math.sqrt(2))\nprint(math.sin(math.radians(30)))   # 0.5\nprint(math.pi)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "first_gpio",
+    "title": "12. 첫 GPIO: LED 켜기",
+    "description": "machine.Pin 으로 보드의 핀을 출력 모드로 만들고 LED 를 제어한다.",
+    "icon": "lightbulb",
+    "notice": "BitBlock 보드의 내장 LED(매트릭스) 는 P8(GPIO 38) 에 있지만 NeoPixel 데이터 라인이라 단순한 Pin.OUT 으로는 제대로 제어되지 않는다. 이 토픽의 예제는 외부에서 직접 연결할 수 있는 디지털 출력 핀 P3(GPIO 2) 에 LED + 220Ω 저항을 연결한 상황을 가정한다. 다른 외부 핀(P0=GPIO 10, P1=GPIO 4, P2=GPIO 8, P4=GPIO 47, P7=GPIO 39, P11=GPIO 48, P12=GPIO 18) 으로 바꿔 써도 된다.",
+    "entries": [
+      {
+        "name": "machine.Pin import",
+        "summary": "하드웨어를 만지는 모든 코드는 machine 모듈에서 시작한다.",
+        "details": "from machine import Pin 한 줄로 Pin 클래스를 가져온다.\nPin 은 디지털 입출력을 다루는 가장 기본 클래스다 — 이후 PWM, ADC, I2C, SPI, UART 도 모두 machine 안에 있다.",
+        "examples": [
+          {
+            "code": "from machine import Pin",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "출력 핀 만들기",
+        "summary": "Pin(번호, Pin.OUT) 으로 핀을 출력 모드로 만든다.",
+        "details": "번호는 보드의 GPIO 번호다. BitBlock 외부 핀 중 P3(GPIO 2), P11(GPIO 48) 등이 디지털 출력에 잘 어울린다 (P8 / GPIO 38 은 내장 NeoPixel 매트릭스라 일반 LED 처럼 못 쓴다).\nPin.OUT 외에 Pin.IN, Pin.OPEN_DRAIN 등이 있다.\n초기값을 Pin(2, Pin.OUT, value=0) 처럼 같이 줄 수도 있다.",
+        "examples": [
+          {
+            "code": "from machine import Pin\n\n# P3 (GPIO 2) 에 외부 LED 를 연결한 가정\nled = Pin(2, Pin.OUT)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "켜기 · 끄기 · 값 읽기",
+        "summary": "led.on(), led.off(), led.value(0/1) — 셋 다 같은 일을 한다.",
+        "details": "led.value() 를 인자 없이 부르면 현재 출력 값을 돌려준다.\ntoggle() 메서드는 현재 값을 뒤집는다 — 깜빡이기 코드를 짧게 만들 때 유용하다.",
+        "examples": [
+          {
+            "code": "from machine import Pin\nimport time\n\n# P3 (GPIO 2) 외부 LED\nled = Pin(2, Pin.OUT)\nled.on()\ntime.sleep_ms(500)\nled.off()\nprint('value:', led.value())",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "깜빡이기 루프",
+        "summary": "for + sleep 조합이 가장 흔한 깜빡이기 패턴이다.",
+        "details": "주기를 짧게 할수록 빠르게 깜빡인다.\n약 50 ms 미만으로 가면 사람 눈에는 떨림처럼 보인다.\n무한 깜빡임은 while True 로 만들고 Ctrl+C 로 중단한다.",
+        "examples": [
+          {
+            "code": "from machine import Pin\nimport time\n\n# P3 (GPIO 2) 외부 LED\nled = Pin(2, Pin.OUT)\n\nfor _ in range(10):\n    led.on()\n    time.sleep_ms(200)\n    led.off()\n    time.sleep_ms(200)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "boot.py 와 main.py",
+        "summary": "보드는 켜지면 boot.py → main.py 순서로 자동 실행한다.",
+        "details": "boot.py 는 부팅 직후 한 번 실행되는 초기화용 — 네트워크 설정 등 짧고 안전한 코드만 둔다.\nmain.py 는 그 뒤에 실행되는 본 프로그램 — LED 깜빡이기 같은 평소 동작을 여기에 넣는다.\nIDE에서 작성한 코드를 보드의 main.py 로 저장하면, USB 가 아닌 외부 전원만으로도 동작한다.",
+        "examples": [
+          {
+            "code": "# main.py — 보드 켜지면 자동 실행\nfrom machine import Pin\nimport time\n\n# P3 (GPIO 2) 외부 LED\nled = Pin(2, Pin.OUT)\nwhile True:\n    led.value(not led.value())\n    time.sleep_ms(500)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "digital_input",
+    "title": "13. 디지털 입력: 버튼",
+    "description": "Pin.IN 과 풀업 저항으로 버튼 입력을 안전하게 읽는다.",
+    "icon": "smart_button",
+    "notice": "이 토픽의 예제는 외부 버튼을 P11(GPIO 48) 에 연결한 가정이다 (다른 외부 디지털 입력 핀 P0(GPIO 10), P1(GPIO 4), P2(GPIO 8), P3(GPIO 2), P4(GPIO 47), P7(GPIO 39), P12(GPIO 18) 어디에 연결해도 무방). 버튼 한쪽을 GPIO 에, 다른 쪽을 GND 에 연결하고 PULL_UP 옵션을 주면 별도 저항 없이도 안정적으로 읽힌다.\nBitBlock 의 내장 버튼 A/B(P5/P6) 는 외부 결선 없이 BbButton(BbPins.SWITCH_A) 같은 라이브러리 호출로 따로 사용한다.",
+    "entries": [
+      {
+        "name": "입력 핀 만들기",
+        "summary": "Pin(번호, Pin.IN, Pin.PULL_UP) 으로 풀업이 켜진 입력 핀을 만든다.",
+        "details": "Pin.IN 은 핀을 입력 모드로 만든다.\n세 번째 인자 Pin.PULL_UP 은 핀 안쪽 풀업 저항을 켜라는 뜻이다 — 버튼이 안 눌렸을 때 핀이 자연스럽게 HIGH 가 된다.\nPULL_DOWN 도 있지만 ESP32-S3 에서는 핀 종류에 따라 지원이 다르다.",
+        "examples": [
+          {
+            "code": "from machine import Pin\n\n# P11 (GPIO 48) 에 외부 버튼 연결\nbtn = Pin(48, Pin.IN, Pin.PULL_UP)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "value() 폴링",
+        "summary": "btn.value() 가 0 이면 눌림, 1 이면 안 눌림이다 (풀업 기준).",
+        "details": "버튼 상태는 매 순간 변하므로 while 루프 안에서 반복적으로 읽는다.\n읽기 사이에 짧은 sleep 을 넣지 않으면 CPU 가 의미 없이 100% 로 도는 모양이 된다.",
+        "examples": [
+          {
+            "code": "from machine import Pin\nimport time\n\n# P11 (GPIO 48) 외부 버튼\nbtn = Pin(48, Pin.IN, Pin.PULL_UP)\n\nwhile True:\n    if btn.value() == 0:\n        print('눌림')\n    time.sleep_ms(50)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "풀업 회로의 의미",
+        "summary": "풀업 저항은 핀이 '아무것도 안 잡힌 상태'에서 떠다니지 않게 잡아 준다.",
+        "details": "풀업이 없으면 누르지 않은 핀은 0/1 사이를 무작위로 오갈 수 있다 (floating).\n풀업이 켜져 있으면 평상시 1 (HIGH), 버튼이 GND 와 연결되면 0 (LOW) 으로 명확해진다 — 그래서 '눌림 = 0' 이 된다.",
+        "examples": []
+      },
+      {
+        "name": "눌렀다 떼는 시점 감지",
+        "summary": "직전 값과 현재 값을 비교해 '0→1 또는 1→0' 변화만 골라낸다.",
+        "details": "단순한 누름 감지로는 '눌림' 이 sleep 주기 동안 여러 번 찍힌다.\n이전 값을 변수에 저장해 두고, 1 → 0 으로 바뀐 순간만 처리하면 누름 한 번에 정확히 한 번 동작한다.",
+        "examples": [
+          {
+            "code": "from machine import Pin\nimport time\n\n# P11 (GPIO 48) 외부 버튼\nbtn = Pin(48, Pin.IN, Pin.PULL_UP)\nprev = btn.value()\n\nwhile True:\n    cur = btn.value()\n    if prev == 1 and cur == 0:\n        print('눌리는 순간')\n    prev = cur\n    time.sleep_ms(20)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "디바운스 (소프트)",
+        "summary": "기계 접점이 튀는 현상을 약간의 지연으로 무시한다.",
+        "details": "버튼은 누른 직후 짧은 시간(보통 5~20 ms) 동안 0/1 을 빠르게 오간다 — 이것이 chattering / bounce.\n변화 감지 후 약 20 ms 정도 기다렸다 같은 값이면 진짜 변화로 간주한다.",
+        "examples": [
+          {
+            "code": "from machine import Pin\nimport time\n\n# P11 (GPIO 48) 외부 버튼\nbtn = Pin(48, Pin.IN, Pin.PULL_UP)\nprev = btn.value()\n\nwhile True:\n    cur = btn.value()\n    if cur != prev:\n        time.sleep_ms(20)\n        if btn.value() == cur:\n            if cur == 0:\n                print('press')\n            else:\n                print('release')\n            prev = cur\n    time.sleep_ms(5)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "pwm_basics",
+    "title": "14. PWM 으로 밝기·톤",
+    "description": "핀을 매우 빠르게 ON/OFF 시켜 LED 밝기나 부저 음높이를 만든다.",
+    "icon": "tune",
+    "notice": "ESP32-S3 의 PWM duty 는 16비트(0~65535) 폭이다. duty_u16(값) 함수가 가장 정밀하다. 일부 자료의 duty(0~1023) 는 호환용 API.\n예제는 외부 LED 를 P3(GPIO 2) 에, 외부 부저를 P4(GPIO 47) 에 연결한 가정이다. 다른 외부 PWM 가능 핀(P0=GPIO 10, P1=GPIO 4, P2=GPIO 8, P7=GPIO 39, P11=GPIO 48, P12=GPIO 18, SERVO=GPIO 16) 으로 바꿔 써도 된다.",
+    "entries": [
+      {
+        "name": "PWM 객체 만들기",
+        "summary": "PWM(Pin(번호), freq=주파수) 한 줄로 PWM 출력을 시작한다.",
+        "details": "주파수(Hz) 가 깜빡이는 빠르기, duty 가 켜져 있는 비율을 결정한다.\nLED 라면 1000 Hz 정도면 충분하고, 부저는 음높이 자체가 주파수다 (440 Hz = '라' 음).",
+        "examples": [
+          {
+            "code": "from machine import Pin, PWM\n\n# P3 (GPIO 2) 외부 LED\nled = PWM(Pin(2), freq=1000)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "duty_u16 으로 밝기 조절",
+        "summary": "0(꺼짐) ~ 65535(최대) 사이의 정수로 평균 밝기를 정한다.",
+        "details": "duty 가 절반(약 32768) 이면 LED 가 절반 밝기로 보인다.\n사람 눈은 PWM 의 평균을 인식하므로 깜빡임이 빠를수록(주파수가 높을수록) 자연스러워 보인다.",
+        "examples": [
+          {
+            "code": "from machine import Pin, PWM\nimport time\n\n# P3 (GPIO 2) 외부 LED\nled = PWM(Pin(2), freq=1000)\nfor d in (0, 16384, 32768, 49152, 65535):\n    led.duty_u16(d)\n    time.sleep_ms(400)\nled.duty_u16(0)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "LED 페이드",
+        "summary": "duty 를 점진적으로 올리고 내리면 부드러운 페이드 효과가 난다.",
+        "details": "step 을 작게 할수록 더 부드럽다.\n반복할 때마다 약간씩 sleep 을 주어 사람 눈이 따라올 수 있게 한다.",
+        "examples": [
+          {
+            "code": "from machine import Pin, PWM\nimport time\n\n# P3 (GPIO 2) 외부 LED\nled = PWM(Pin(2), freq=1000)\n\nfor _ in range(3):\n    for d in range(0, 65536, 1024):\n        led.duty_u16(d)\n        time.sleep_ms(8)\n    for d in range(65535, -1, -1024):\n        led.duty_u16(d)\n        time.sleep_ms(8)\n\nled.duty_u16(0)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "부저로 단음 내기",
+        "summary": "freq() 를 음높이로 바꾸고 duty 를 절반쯤 두면 소리가 난다.",
+        "details": "수동 부저는 PWM 으로 직접 주파수를 만들어야 소리가 난다.\nfreq() 호출만으로 음높이가 바뀌고, duty 를 0 으로 만들면 소리가 멈춘다.",
+        "examples": [
+          {
+            "code": "from machine import Pin, PWM\nimport time\n\n# P4 (GPIO 47) 외부 부저\nbuz = PWM(Pin(47), freq=440)\nbuz.duty_u16(32768)\ntime.sleep(1)\nbuz.duty_u16(0)\nbuz.deinit()",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "deinit 으로 자원 해제",
+        "summary": "더 안 쓸 PWM 은 deinit() 으로 풀어 주는 게 좋다.",
+        "details": "ESP32-S3 의 PWM 은 한정된 LEDC 채널을 쓴다 — 안 쓰는 채널을 쥐고 있으면 다른 PWM 을 만들 수 없다.\n다른 모듈로 같은 핀을 다시 쓰기 전에 꼭 해제한다.",
+        "examples": [
+          {
+            "code": "from machine import Pin, PWM\n\n# P3 (GPIO 2) 외부 LED\nled = PWM(Pin(2), freq=1000, duty_u16=20000)\n# ... 잠시 사용 ...\nled.deinit()",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "adc_input",
+    "title": "15. ADC 아날로그 입력",
+    "description": "가변저항/조도 센서 같은 아날로그 신호를 숫자로 읽는다.",
+    "icon": "input",
+    "notice": "ESP32-S3 의 ADC1 채널은 GPIO 1~10 이다. 그 외 핀은 ADC 로 쓸 수 없다 (ADC2 는 WiFi 와 충돌).\nBitBlock 외부 핀 중 ADC1 가능: P0(GPIO 10), P1(GPIO 4), P2(GPIO 8), P3(GPIO 2). 예제는 P0(GPIO 10) 에 가변저항(또는 광센서) 와이퍼를 연결한 가정이다.",
+    "entries": [
+      {
+        "name": "ADC 객체 만들기",
+        "summary": "ADC(Pin(번호)) 로 아날로그 입력을 시작한다.",
+        "details": "ADC = Analog-to-Digital Converter. 핀에 들어오는 0~3.3V 의 전압을 정수로 바꿔 준다.\nESP32-S3 는 채널마다 감쇠(attenuation) 설정이 가능해, 측정할 전압 범위를 조정할 수 있다 (atten=ADC.ATTN_11DB 가 가장 넓은 범위).",
+        "examples": [
+          {
+            "code": "from machine import ADC, Pin\n\n# P0 (GPIO 10) 에 가변저항 와이퍼 연결\nadc = ADC(Pin(10))\nadc.atten(ADC.ATTN_11DB)     # 0~3.3V 범위로",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "read_u16() 으로 값 읽기",
+        "summary": "0(0V)에서 65535(최대 전압)까지의 정수를 돌려준다.",
+        "details": "MicroPython 표준 인터페이스다.\n해상도가 16비트로 정규화되어 있어, 다른 보드로 옮겨도 코드 수정 없이 비례 계산을 할 수 있다.",
+        "examples": [
+          {
+            "code": "from machine import ADC, Pin\nimport time\n\n# P0 (GPIO 10) 가변저항\nadc = ADC(Pin(10))\nadc.atten(ADC.ATTN_11DB)\n\nfor _ in range(5):\n    print(adc.read_u16())\n    time.sleep_ms(200)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "전압으로 환산",
+        "summary": "비례식으로 0~65535 → 0~3.3V 로 바꾼다.",
+        "details": "정확한 환산은 보드의 기준 전압(약 3.3V) 과 감쇠 설정에 따라 다르다.\n학습 단계에서는 'raw / 65535 * 3.3' 로 충분하다.",
+        "examples": [
+          {
+            "code": "from machine import ADC, Pin\nimport time\n\n# P0 (GPIO 10) 가변저항\nadc = ADC(Pin(10))\nadc.atten(ADC.ATTN_11DB)\n\nfor _ in range(5):\n    raw = adc.read_u16()\n    volt = raw / 65535 * 3.3\n    print(raw, '=', round(volt, 2), 'V')\n    time.sleep_ms(300)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "가변저항으로 LED 밝기 조절",
+        "summary": "ADC 값을 그대로 PWM duty 로 보내면 노브로 밝기가 바뀐다.",
+        "details": "둘 다 0~65535 범위라 별도 환산 없이 직접 연결할 수 있다.\n사람 눈은 로그 응답이라 선형 매핑은 약간 불균등해 보일 수 있다 — 학습 단계에서는 무시해도 된다.",
+        "examples": [
+          {
+            "code": "from machine import ADC, Pin, PWM\nimport time\n\n# 가변저항: P0 (GPIO 10), 외부 LED: P3 (GPIO 2)\nknob = ADC(Pin(10))\nknob.atten(ADC.ATTN_11DB)\nled = PWM(Pin(2), freq=1000)\n\nwhile True:\n    led.duty_u16(knob.read_u16())\n    time.sleep_ms(20)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "노이즈 줄이기 — 평균",
+        "summary": "여러 번 읽어 평균을 내면 값이 훨씬 안정된다.",
+        "details": "ADC 값은 회로/전원 잡음 때문에 늘 살짝 흔들린다.\n8~16번 정도 읽어 평균하면 사용자 눈에 보이는 떨림이 거의 사라진다.\n속도가 중요한 경우(예: 음악 입력)는 평균 횟수를 줄여 균형을 잡는다.",
+        "examples": [
+          {
+            "code": "from machine import ADC, Pin\nimport time\n\n# P0 (GPIO 10) 가변저항\nadc = ADC(Pin(10))\nadc.atten(ADC.ATTN_11DB)\n\ndef read_avg(n=8):\n    s = 0\n    for _ in range(n):\n        s += adc.read_u16()\n    return s // n\n\nfor _ in range(10):\n    print(read_avg())\n    time.sleep_ms(100)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "interrupts",
+    "title": "16. 인터럽트 — Pin.irq",
+    "description": "버튼이 눌리는 순간을 폴링 없이 콜백으로 받는다.",
+    "icon": "bolt",
+    "notice": "예제는 외부 버튼을 P11(GPIO 48) 에 연결한 가정이다 (다른 외부 입력 핀 P0(GPIO 10), P1(GPIO 4), P2(GPIO 8), P3(GPIO 2), P4(GPIO 47), P7(GPIO 39), P12(GPIO 18) 으로 바꿔도 된다).",
+    "entries": [
+      {
+        "name": "irq 등록",
+        "summary": "btn.irq(trigger=..., handler=콜백) 한 줄로 핀 변화에 반응하게 한다.",
+        "details": "이후로는 메인 루프가 sleep 중이어도, 핀 신호가 바뀌는 순간 콜백 함수가 자동 호출된다.\n폴링이 필요 없어지므로 CPU 가 한가해진다.",
+        "examples": [
+          {
+            "code": "from machine import Pin\n\n# P11 (GPIO 48) 외부 버튼\nbtn = Pin(48, Pin.IN, Pin.PULL_UP)\n\ndef on_press(p):\n    print('pressed')\n\nbtn.irq(trigger=Pin.IRQ_FALLING, handler=on_press)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "트리거 종류",
+        "summary": "IRQ_RISING (0→1), IRQ_FALLING (1→0), 둘 다(|로 결합) 가 있다.",
+        "details": "풀업 입력에서 버튼이 눌리는 순간은 1→0 이므로 IRQ_FALLING 이 맞다.\n눌림과 뗌 모두를 잡으려면 trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING.",
+        "examples": [
+          {
+            "code": "from machine import Pin\n\n# P11 (GPIO 48) 외부 버튼\nbtn = Pin(48, Pin.IN, Pin.PULL_UP)\n\ndef on_change(p):\n    print('value =', p.value())\n\nbtn.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=on_change)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "콜백 안에서 하면 안 되는 것",
+        "summary": "콜백은 짧고 안전한 일만 — print 정도까지가 한계다.",
+        "details": "인터럽트 콜백 안에서는 메모리 할당, 긴 sleep, 다른 인터럽트 호출 같은 무거운 작업을 피해야 한다.\n조건이 맞으면 메인 루프에서 처리할 수 있도록 '플래그만 세워 두는' 패턴이 가장 안전하다.",
+        "examples": []
+      },
+      {
+        "name": "플래그 패턴",
+        "summary": "콜백은 '왔다' 표시만 하고, 실제 작업은 메인 루프가 한다.",
+        "details": "이렇게 하면 메인 루프 쪽에서 마음 놓고 print 나 통신 같은 일을 할 수 있다.\n변수 이름이 같으면 함수 안에서 global 로 선언해 줘야 한다.",
+        "examples": [
+          {
+            "code": "from machine import Pin\nimport time\n\n# P11 (GPIO 48) 외부 버튼\nbtn = Pin(48, Pin.IN, Pin.PULL_UP)\nflag = False\n\ndef on_press(p):\n    global flag\n    flag = True\n\nbtn.irq(trigger=Pin.IRQ_FALLING, handler=on_press)\n\nwhile True:\n    if flag:\n        flag = False\n        print('처리 시작')\n    time.sleep_ms(50)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "인터럽트 해제",
+        "summary": "btn.irq(handler=None) 으로 등록을 끊는다.",
+        "details": "더 이상 콜백을 받고 싶지 않을 때, 또는 같은 핀을 다른 용도로 다시 쓸 때 호출한다.",
+        "examples": [
+          {
+            "code": "btn.irq(handler=None)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "timers",
+    "title": "17. Timer 로 주기 작업",
+    "description": "machine.Timer 로 일정 주기마다 자동 실행되는 작업을 만든다.",
+    "icon": "schedule",
+    "entries": [
+      {
+        "name": "Timer 만들기",
+        "summary": "Timer(-1) 은 소프트 타이머 — 가장 가볍고 호환성이 좋다.",
+        "details": "ESP32 계열은 하드웨어 타이머도 있지만, 학습/일반 용도로는 소프트 타이머가 충분하다.\nID 자리에 -1 을 주면 'OS 가 알아서 골라 달라' 는 의미.",
+        "examples": [
+          {
+            "code": "from machine import Timer\n\ntim = Timer(-1)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "init 으로 주기 설정",
+        "summary": "tim.init(period=ms, mode=..., callback=콜백) 으로 시작한다.",
+        "details": "period 는 밀리초 단위.\nmode 는 Timer.PERIODIC (반복) 또는 Timer.ONE_SHOT (한 번만).\n콜백 함수는 인자 한 개(타이머 자기 자신)를 받는다.",
+        "examples": [
+          {
+            "code": "from machine import Pin, Timer\n\n# P3 (GPIO 2) 외부 LED\nled = Pin(2, Pin.OUT)\ntim = Timer(-1)\n\ndef tick(t):\n    led.value(not led.value())\n\ntim.init(period=500, mode=Timer.PERIODIC, callback=tick)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "ONE_SHOT — 한 번만 동작",
+        "summary": "딱 한 번 실행되고 끝나는 타이머다.",
+        "details": "'5초 뒤에 알림 한 번' 같은 일에 어울린다.\nONE_SHOT 은 끝난 뒤에도 같은 타이머 객체에 init 을 다시 부르면 재사용 가능.",
+        "examples": [
+          {
+            "code": "from machine import Timer\n\ndef done(t):\n    print('5초 지남')\n\ntim = Timer(-1)\ntim.init(period=5000, mode=Timer.ONE_SHOT, callback=done)\n\n# 메인 코드는 계속 진행됨",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "콜백 작성 주의",
+        "summary": "Pin.irq 와 같다 — 짧게, 메모리 할당 적게, 가능하면 플래그만.",
+        "details": "타이머 콜백도 일종의 인터럽트 컨텍스트에서 도므로 무거운 작업을 직접 하지 않는다.\n복잡한 일은 메인 루프에 미루는 편이 안전하다.",
+        "examples": []
+      },
+      {
+        "name": "deinit 으로 멈추기",
+        "summary": "tim.deinit() 한 줄로 타이머를 멈추고 자원을 해제한다.",
+        "details": "deinit 후에는 더 이상 콜백이 호출되지 않는다.\n주기를 바꾸려면 deinit 후 다시 init 하거나, 그냥 init 만 다시 호출해도 된다 (이전 설정을 덮어씀).",
+        "examples": [
+          {
+            "code": "tim.deinit()",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "i2c_oled",
+    "title": "18. I2C 통신 기초",
+    "description": "I2C 버스에 연결된 장치를 찾고 데이터를 주고받는 기본기를 익힌다.",
+    "icon": "cable",
+    "notice": "I2C 는 SDA / SCL 두 선만으로 여러 장치를 연결하는 직렬 버스다. SDA 와 SCL 에는 보통 풀업 저항이 필요하지만, BitBlock 은 SDA(GPIO 14) / SCL(GPIO 21) 두 핀에 풀업이 내장되어 있어 그대로 쓸 수 있다 (BbPins.SDA / BbPins.SCL).",
+    "entries": [
+      {
+        "name": "I2C 객체 만들기",
+        "summary": "I2C(0, scl=Pin(...), sda=Pin(...), freq=400000) 으로 시작한다.",
+        "details": "첫 번째 숫자는 I2C 컨트롤러 번호 (ESP32-S3 는 0/1 두 개).\nfreq 는 보통 100000 (표준) 또는 400000 (Fast).\nBitBlock 에서는 SCL(GPIO 21), SDA(GPIO 14) 가 I2C 전용으로 노출되어 있다 (BbPins.SCL / BbPins.SDA).",
+        "examples": [
+          {
+            "code": "from machine import I2C, Pin\n\n# SCL = GPIO 21, SDA = GPIO 14 (BbPins.SCL / BbPins.SDA)\ni2c = I2C(0, scl=Pin(21), sda=Pin(14), freq=400000)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "scan() 으로 장치 찾기",
+        "summary": "버스에 연결된 장치들의 7비트 주소 리스트를 돌려준다.",
+        "details": "처음 통신할 때 가장 먼저 해 보는 점검이다.\n예상한 주소가 보이지 않으면 결선/전원/풀업 중 하나가 문제다.",
+        "examples": [
+          {
+            "code": "addrs = i2c.scan()\nprint('found:', [hex(a) for a in addrs])",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "writeto / readfrom",
+        "summary": "장치 주소에 바이트열을 쓰거나 길이만큼 읽어 온다.",
+        "details": "writeto(addr, data) — data 는 bytes/bytearray.\nreadfrom(addr, n) — n 바이트를 읽어 bytes 로 돌려준다.\n많은 칩은 '레지스터 주소 한 바이트 쓰고 → 바로 데이터 읽기' 패턴을 쓴다.",
+        "examples": [
+          {
+            "code": "addr = 0x3C        # OLED 예시 주소\ni2c.writeto(addr, b'\\x00')\ndata = i2c.readfrom(addr, 1)\nprint(data)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "writeto_mem / readfrom_mem",
+        "summary": "레지스터 기반 칩과 통신할 때 더 편한 헬퍼다.",
+        "details": "writeto_mem(addr, reg, data) — reg 레지스터에 data 를 쓴다.\nreadfrom_mem(addr, reg, n) — reg 부터 n 바이트를 읽는다.\n센서/IO 익스펜더 대부분이 이 패턴이다.",
+        "examples": [
+          {
+            "code": "# 가상의 센서: 레지스터 0x10 에 한 바이트 쓰고, 0x20 에서 두 바이트 읽기\ni2c.writeto_mem(0x68, 0x10, b'\\x01')\nbuf = i2c.readfrom_mem(0x68, 0x20, 2)\nprint(buf)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "외부 드라이버 import 흐름",
+        "summary": "OLED 같은 장치는 보통 ssd1306.py 같은 별도 드라이버를 lib/ 에 넣는다.",
+        "details": "공식 micropython 저장소나 mip 패키지에 검증된 드라이버가 있으니 가져다 쓴다.\n드라이버에 i2c 객체와 주소만 넘기면 텍스트/이미지 같은 고수준 API 를 그대로 쓸 수 있다.",
+        "examples": [
+          {
+            "code": "# 드라이버가 보드의 /lib/ssd1306.py 에 있을 때\nfrom machine import I2C, Pin\nimport ssd1306\n\n# SCL = GPIO 21, SDA = GPIO 14 (BbPins.SCL / BbPins.SDA)\ni2c = I2C(0, scl=Pin(21), sda=Pin(14))\noled = ssd1306.SSD1306_I2C(128, 64, i2c)\noled.fill(0)\noled.text('hello', 0, 0)\noled.show()",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "uart_serial",
+    "title": "19. UART 직렬 통신",
+    "description": "GPS, 블루투스, 다른 보드와 UART 로 데이터를 주고받는다.",
+    "icon": "swap_horiz",
+    "notice": "UART0 은 보통 USB-시리얼(REPL)에 쓰이므로 외부 통신용으로는 UART(1) 또는 UART(2) 를 권장한다.\n예제는 외부 결선용 핀 P12(GPIO 18) 을 TX 로, P11(GPIO 48) 을 RX 로 사용한다 (다른 외부 핀 P0(GPIO 10), P1(GPIO 4), P2(GPIO 8), P3(GPIO 2), P4(GPIO 47), P7(GPIO 39) 으로 바꿔도 된다).",
+    "entries": [
+      {
+        "name": "UART 객체 만들기",
+        "summary": "UART(1, baudrate=9600, tx=Pin(...), rx=Pin(...)) 형태로 만든다.",
+        "details": "양쪽 장치의 baudrate 는 반드시 같아야 한다 (대표값: 9600, 115200).\ntx 는 내가 보낼 핀, rx 는 내가 받을 핀이다 — 상대 장치의 RX/TX 와 교차로 연결한다.",
+        "examples": [
+          {
+            "code": "from machine import UART, Pin\n\n# TX = P12 (GPIO 18), RX = P11 (GPIO 48)\nuart = UART(1, baudrate=9600, tx=Pin(18), rx=Pin(48))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "write 로 송신",
+        "summary": "uart.write(b'문자열') 로 바이트를 내보낸다.",
+        "details": "문자열을 보내려면 'hello'.encode() 또는 b'hello' 처럼 bytes 로 변환해야 한다.\n반환값은 실제로 보낸 바이트 수.",
+        "examples": [
+          {
+            "code": "uart.write(b'hello\\n')\nuart.write('temp=23\\n'.encode())",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "any() 와 read",
+        "summary": "any() 는 수신 버퍼에 들어있는 바이트 수를 알려 준다.",
+        "details": "any() > 0 인지 확인 후 read 또는 read(n) 으로 읽으면 블록(대기) 없이 처리된다.\nread() (인자 없음) 은 버퍼에 있는 모든 바이트를 한 번에 가져온다.",
+        "examples": [
+          {
+            "code": "import time\n\nwhile True:\n    if uart.any():\n        data = uart.read()\n        print('받음:', data)\n    time.sleep_ms(50)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "readline 사용",
+        "summary": "줄 단위(줄바꿈으로 끝나는) 데이터에는 readline() 이 편하다.",
+        "details": "한 줄이 아직 안 들어왔으면 None 을 돌려준다.\nGPS NMEA 같은 줄 단위 프로토콜에 잘 맞는다.",
+        "examples": [
+          {
+            "code": "import time\n\nwhile True:\n    line = uart.readline()\n    if line:\n        print(line.strip())\n    time.sleep_ms(20)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "응용 — 다른 보드와 핸드셰이크",
+        "summary": "두 보드를 UART 로 연결해 ping/pong 을 주고받는 작은 예제.",
+        "details": "GND 를 공유하고 한쪽 TX 를 다른 쪽 RX 에 교차로 연결한다.\n수신 측은 'PING' 이 오면 'PONG' 으로 답한다.",
+        "examples": [
+          {
+            "code": "from machine import UART, Pin\nimport time\n\n# TX = P12 (GPIO 18), RX = P11 (GPIO 48)\nuart = UART(1, baudrate=9600, tx=Pin(18), rx=Pin(48))\n\nwhile True:\n    line = uart.readline()\n    if line:\n        msg = line.strip()\n        print('rx:', msg)\n        if msg == b'PING':\n            uart.write(b'PONG\\n')\n    time.sleep_ms(20)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "filesystem",
+    "title": "20. 파일 시스템",
+    "description": "보드의 내장 플래시에 파일을 쓰고 읽는 표준 방법을 익힌다.",
+    "icon": "folder",
+    "entries": [
+      {
+        "name": "boot.py 와 main.py",
+        "summary": "보드 부팅 시 boot.py → main.py 순서로 자동 실행된다.",
+        "details": "boot.py 에는 네트워크 활성화 같은 짧은 초기화만 둔다 (느리거나 실패할 수 있는 코드는 피한다).\nmain.py 에 본 프로그램을 둔다.\n둘 다 보드의 루트(/)에 위치해야 한다.",
+        "examples": []
+      },
+      {
+        "name": "os.listdir / os.remove",
+        "summary": "파일/디렉터리 목록과 단일 삭제는 os 모듈이 담당한다.",
+        "details": "os.listdir(경로) — 그 폴더의 파일 이름 리스트.\nos.remove(파일경로) — 한 파일 삭제.\nos.mkdir / os.rmdir — 폴더 만들기/지우기 (rmdir 은 빈 폴더만).",
+        "examples": [
+          {
+            "code": "import os\n\nprint(os.listdir('/'))\nos.mkdir('/data')\nprint(os.listdir('/'))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "파일 열고 쓰기",
+        "summary": "with open(...) as f: 패턴이 가장 안전하다.",
+        "details": "모드: 'r' 읽기, 'w' 새로 쓰기(있으면 덮어씀), 'a' 끝에 추가.\nwith 블록을 빠져나갈 때 close 가 자동으로 호출되어 데이터가 디스크에 확정된다 (flush + close).",
+        "examples": [
+          {
+            "code": "with open('/data/log.txt', 'w') as f:\n    f.write('first line\\n')\n    f.write('second line\\n')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "파일 읽기",
+        "summary": "한 번에 다 읽으려면 read(), 줄 단위로는 readlines() 또는 for 순회.",
+        "details": "큰 파일은 한 번에 읽지 말고 줄 단위로 처리한다 — RAM 을 아낀다.\n파일 객체는 그 자체가 이터러블이라 for line in f 가 가장 자연스럽다.",
+        "examples": [
+          {
+            "code": "with open('/data/log.txt') as f:\n    for line in f:\n        print(line.strip())",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "JSON 으로 설정 저장",
+        "summary": "딕셔너리를 JSON 문자열로 만들어 파일에 저장하면 설정/상태를 손쉽게 영속화할 수 있다.",
+        "details": "ujson(또는 json) 모듈은 dump/load 로 파일과 직접 주고받을 수도 있다.\n전원이 갑자기 꺼져도 안전하길 원한다면, 임시 파일에 쓴 뒤 os.rename 으로 교체하는 패턴을 쓴다.",
+        "examples": [
+          {
+            "code": "import ujson\n\nconfig = {'ssid': 'home', 'pw': '1234', 'retry': 3}\n\nwith open('/data/config.json', 'w') as f:\n    ujson.dump(config, f)\n\nwith open('/data/config.json') as f:\n    loaded = ujson.load(f)\nprint(loaded)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "exceptions_gc",
+    "title": "21. 예외 처리와 메모리",
+    "description": "오류가 나도 프로그램이 멈추지 않게 하고, 작은 메모리를 효율적으로 쓰는 법을 익힌다.",
+    "icon": "shield",
+    "entries": [
+      {
+        "name": "try / except 기본",
+        "summary": "try 블록에서 발생한 예외를 except 로 받아 처리한다.",
+        "details": "예외 종류를 명시하면 의도치 않은 다른 예외까지 삼키는 일을 막을 수 있다.\n예: except OSError as e: 처럼 변수에 받아 메시지를 확인할 수 있다.",
+        "examples": [
+          {
+            "code": "try:\n    n = int('abc')\nexcept ValueError as e:\n    print('변환 실패:', e)",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "여러 예외 처리와 finally",
+        "summary": "except 를 여러 줄로 적거나 튜플로 묶을 수 있다. finally 는 늘 실행된다.",
+        "details": "finally 블록은 예외가 났든 안 났든 마지막에 반드시 실행된다 — 자원 해제(파일 닫기, 핀 해제 등) 에 잘 맞는다.\n물론 with 문이 있는 경우(파일 등) 그쪽이 더 깔끔하다.",
+        "examples": [
+          {
+            "code": "try:\n    f = open('/data/missing.txt')\n    data = f.read()\nexcept OSError:\n    print('파일 없음')\nfinally:\n    print('정리 완료')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "직접 raise",
+        "summary": "raise 예외종류('메시지') 로 내가 만든 함수에서도 예외를 던질 수 있다.",
+        "details": "잘못된 인자 등 호출자가 알아채야 할 상황을 알릴 때 쓴다.\n예외 종류는 ValueError, TypeError 등 표준에서 의미가 맞는 것을 고른다.",
+        "examples": [
+          {
+            "code": "def set_brightness(v):\n    if not 0 <= v <= 100:\n        raise ValueError('0~100 사이여야 함')\n    print('밝기:', v)\n\nset_brightness(80)\n# set_brightness(150) 은 예외 발생",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "gc.mem_free 로 남은 메모리 보기",
+        "summary": "import gc → gc.mem_free() 로 사용 가능한 RAM(바이트) 을 확인한다.",
+        "details": "MicroPython 은 RAM 이 작다 — 코드가 갑자기 MemoryError 로 죽으면 메모리를 의심한다.\n주기적으로 mem_free 를 출력해 두면 어디서 메모리가 늘어나는지 추적이 쉬워진다.",
+        "examples": [
+          {
+            "code": "import gc\n\nprint('free:', gc.mem_free(), 'alloc:', gc.mem_alloc())",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "gc.collect 시점",
+        "summary": "큰 작업 직전이나 직후에 한 번 호출하면 메모리가 정리된다.",
+        "details": "MicroPython 은 자동으로도 GC 를 돌리지만, 큰 할당 직전에 명시적으로 collect 를 부르면 단편화를 줄일 수 있다.\n매 루프마다 collect 를 부르는 건 오히려 성능을 떨어뜨린다 — 필요한 자리에서만 쓴다.",
+        "examples": [
+          {
+            "code": "import gc\n\ngc.collect()\nprint('after gc:', gc.mem_free())",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wifi",
+    "title": "22. WiFi 연결",
+    "description": "ESP32-S3 의 내장 WiFi 로 무선 네트워크에 접속한다.",
+    "icon": "wifi",
+    "notice": "비밀번호 같은 민감한 값은 코드에 그대로 두지 말고, 별도 파일(예: /secrets.json)이나 환경에 두고 import 하는 편이 안전하다.",
+    "entries": [
+      {
+        "name": "network 모듈",
+        "summary": "import network 한 줄이면 WiFi/이더넷 같은 네트워크 인터페이스에 접근할 수 있다.",
+        "details": "WLAN 클래스가 무선 인터페이스를 다룬다.\nSTA_IF (스테이션, 다른 AP 에 접속) / AP_IF (액세스포인트, 자기 자신이 AP) 두 모드가 있다.",
+        "examples": []
+      },
+      {
+        "name": "STA 활성화와 접속",
+        "summary": "WLAN(STA_IF).active(True) → connect(ssid, pw) 가 기본 흐름이다.",
+        "details": "active(True) 는 WiFi 라디오를 켜는 단계.\nconnect 는 비동기다 — 호출 후 isconnected() 로 폴링하며 기다려야 한다.",
+        "examples": [
+          {
+            "code": "import network, time\n\nwlan = network.WLAN(network.STA_IF)\nwlan.active(True)\nwlan.connect('내SSID', '내비밀번호')\n\nfor _ in range(20):\n    if wlan.isconnected():\n        break\n    print('대기...')\n    time.sleep(1)\n\nprint('접속:', wlan.isconnected())",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "ifconfig 로 IP 확인",
+        "summary": "(IP, 서브넷, 게이트웨이, DNS) 4개 튜플을 돌려준다.",
+        "details": "접속이 성공하고 IP 가 잡힌 뒤에 호출해야 의미 있는 값이 나온다.\nIP 가 0.0.0.0 이라면 아직 DHCP 로부터 주소를 못 받은 상태.",
+        "examples": [
+          {
+            "code": "if wlan.isconnected():\n    print(wlan.ifconfig())",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "재접속 패턴",
+        "summary": "WiFi 가 끊어졌을 때 자동으로 다시 잇는 작은 헬퍼.",
+        "details": "isconnected 가 False 가 되면 connect 를 다시 호출한다.\n단, 빠른 재시도는 보드/공유기에 부담이 되므로 1~5초 정도의 대기를 둔다.",
+        "examples": [
+          {
+            "code": "import network, time\n\nwlan = network.WLAN(network.STA_IF)\nwlan.active(True)\n\ndef ensure_wifi(ssid, pw, timeout=15):\n    if wlan.isconnected():\n        return True\n    wlan.connect(ssid, pw)\n    t0 = time.ticks_ms()\n    while not wlan.isconnected():\n        if time.ticks_diff(time.ticks_ms(), t0) > timeout * 1000:\n            return False\n        time.sleep(1)\n    return True\n\nprint(ensure_wifi('내SSID', '내비밀번호'))",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "끊고 절전",
+        "summary": "오래 안 쓸 때는 disconnect → active(False) 로 라디오를 꺼 두면 전류가 줄어든다.",
+        "details": "WiFi 라디오는 보드 전체 소비 전류의 큰 부분을 차지한다.\n배터리로 돌리는 장치라면 데이터 전송 직후 빠르게 끄는 것이 좋다.",
+        "examples": [
+          {
+            "code": "wlan.disconnect()\nwlan.active(False)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "http_request",
+    "title": "23. HTTP 로 데이터 받기",
+    "description": "WiFi 가 연결된 상태에서 외부 서버에 GET/POST 요청을 보낸다.",
+    "icon": "cloud_download",
+    "notice": "이 모든 예제는 WiFi 가 먼저 연결되어 있어야 동작한다 (앞 토픽 참고).",
+    "entries": [
+      {
+        "name": "urequests import",
+        "summary": "MicroPython 의 가벼운 HTTP 클라이언트는 urequests 다.",
+        "details": "PC Python 의 requests 와 모양이 비슷하지만 일부 옵션이 빠져 있다.\nimport urequests as requests 로 별명을 줘서 평소처럼 쓰는 사람도 많다.",
+        "examples": [
+          {
+            "code": "import urequests",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "GET 요청",
+        "summary": "urequests.get(URL) 로 응답 객체를 받는다.",
+        "details": "응답 객체의 status_code, text, content, json() 으로 결과를 본다.\n반드시 close() 를 호출해 소켓을 풀어 줘야 한다 (메모리 누수 방지).",
+        "examples": [
+          {
+            "code": "import urequests\n\nr = urequests.get('http://example.com/')\nprint(r.status_code)\nprint(r.text[:200])\nr.close()",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "JSON 응답 파싱",
+        "summary": "응답이 JSON 이면 r.json() 한 번이면 딕셔너리/리스트로 변환된다.",
+        "details": "수동으로 ujson.loads(r.text) 를 하는 것과 같다.\n응답이 큰 경우 r.text 에 먼저 저장해 두면 디버깅이 편하다.",
+        "examples": [
+          {
+            "code": "import urequests\n\nr = urequests.get('http://api.example.com/data.json')\ndata = r.json()\nprint(data.get('temperature'))\nr.close()",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "POST 요청",
+        "summary": "data 또는 json 인자로 본문을 함께 보낸다.",
+        "details": "json= 을 쓰면 알아서 직렬화하고 Content-Type 헤더까지 설정해 준다.\nheaders 인자로 인증 토큰 등을 넣을 수 있다.",
+        "examples": [
+          {
+            "code": "import urequests\n\npayload = {'sensor': 'temp', 'value': 23.4}\nr = urequests.post('http://api.example.com/log',\n                   json=payload,\n                   headers={'X-Token': 'abc123'})\nprint(r.status_code, r.text)\nr.close()",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "메모리와 try / finally",
+        "summary": "예외가 나도 close 가 호출되도록 try / finally 로 감싸는 게 안전하다.",
+        "details": "네트워크 호출은 끊기거나 시간이 오래 걸릴 수 있다 — 예외가 발생할 가능성을 항상 염두에 둔다.\nfinally 안에서 close 를 호출하면 누수를 막을 수 있다.",
+        "examples": [
+          {
+            "code": "import urequests\n\nr = None\ntry:\n    r = urequests.get('http://example.com/data')\n    print(r.text[:100])\nexcept OSError as e:\n    print('네트워크 오류:', e)\nfinally:\n    if r is not None:\n        r.close()",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "deepsleep",
+    "title": "24. Deep Sleep 과 RTC",
+    "description": "배터리 동작을 위해 보드를 길게 재우고, 깨어났을 때의 동작을 익힌다.",
+    "icon": "bedtime",
+    "notice": "Deep sleep 에서 깨어나면 보드는 사실상 리셋된 상태로 시작한다 — 모든 변수가 사라지고 boot.py / main.py 가 다시 실행된다. 보존이 필요한 값은 RTC 메모리나 파일에 저장한다.",
+    "entries": [
+      {
+        "name": "machine.deepsleep",
+        "summary": "deepsleep(ms) 한 줄이면 그 시간만큼 재우다 깨어난다.",
+        "details": "딥 슬립 중에는 CPU 와 대부분의 주변장치가 꺼져 전류 소모가 매우 작아진다.\n호출 즉시 진입 — 호출 다음 줄은 실행되지 않는다 (깨어나면 리셋부터 다시 시작).",
+        "examples": [
+          {
+            "code": "import machine\n\nprint('잠들기 전')\nmachine.deepsleep(10000)     # 10초",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "깨어난 이유 확인",
+        "summary": "machine.wake_reason() 으로 어떤 사건으로 깨어났는지 알 수 있다.",
+        "details": "리셋 종류는 machine.reset_cause() 로 확인 — DEEPSLEEP_RESET 이면 딥 슬립에서 깨어난 것.\n이 값을 보고 '첫 부팅' 과 '주기적 깨어남' 을 분리하면 처리 흐름이 깔끔해진다.",
+        "examples": [
+          {
+            "code": "import machine\n\nif machine.reset_cause() == machine.DEEPSLEEP_RESET:\n    print('딥슬립에서 깨어남')\nelse:\n    print('일반 부팅')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "핀으로 깨우기",
+        "summary": "특정 핀이 HIGH/LOW 가 되면 그 시점에 깨어난다.",
+        "details": "버튼이 눌렸을 때 깨어나는 장치를 만들 때 쓴다.\nESP32 계열에서는 RTC 도메인에 속한 핀(보드 매뉴얼 참고) 만 wakeup 으로 쓸 수 있다.",
+        "examples": [
+          {
+            "code": "import machine\nfrom machine import Pin\n\n# P1 (GPIO 4) 외부 버튼 - LOW 로 떨어지면 깨어남\nwake_pin = Pin(4, Pin.IN, Pin.PULL_UP)\nmachine.wake_on_ext0(pin=wake_pin, level=0)\nmachine.deepsleep()",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "RTC 메모리 — 잠 깨고도 살아남는 값",
+        "summary": "machine.RTC().memory(...) 로 작은 바이트열을 보존할 수 있다.",
+        "details": "딥슬립을 거쳐도 사라지지 않는 작은 저장 공간이다 (보드에 따라 수 KB).\n파일보다 빠르고 플래시 마모가 없다.\n전원이 완전히 빠지면 사라지므로, 영구 저장이 필요하면 파일을 함께 쓴다.",
+        "examples": [
+          {
+            "code": "import machine\n\nrtc = machine.RTC()\n\nold = rtc.memory()\nprint('이전:', old)\n\nrtc.memory(b'count=1')",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "name": "응용 — 1분마다 측정 후 다시 잠들기",
+        "summary": "센서 값 한 번 읽고, 보내고, 다시 60초 잠드는 패턴.",
+        "details": "배터리 동작 IoT 센서 노드의 표준 패턴이다.\n측정/전송이 끝나면 즉시 deepsleep 으로 들어가는 것이 핵심 — 평균 전류가 극적으로 줄어든다.",
+        "examples": [
+          {
+            "code": "import machine, time\nfrom machine import ADC, Pin\n\n# P0 (GPIO 10) 에 외부 센서(가변저항/광센서 등) 연결\nadc = ADC(Pin(10))\nadc.atten(ADC.ATTN_11DB)\n\nvalue = adc.read_u16()\nprint('측정:', value)\n# 여기서 WiFi 켜고 서버에 전송 (생략)\n\nprint('60초 잠')\nmachine.deepsleep(60 * 1000)",
+            "description": ""
+          }
+        ]
+      }
+    ]
+  }
+]
